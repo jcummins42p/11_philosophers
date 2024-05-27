@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/27 17:52:12 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:40:01 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,17 @@
 # include <sys/types.h>
 # include <sys/time.h>
 # include <limits.h>
+
+typedef enum e_mutex_code
+{
+	LOCK,
+	UNLOCK,
+	INIT,
+	DESTROY,
+	CREATE,
+	JOIN,
+	DETACH
+} t_mutex_code;
 
 typedef pthread_mutex_t t_mtx;
 

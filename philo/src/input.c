@@ -6,13 +6,13 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/27 18:15:44 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/27 19:03:25 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		ft_strlen(const char *str)
+int	ft_strlen(const char *str)
 {
 	int	len;
 
@@ -29,7 +29,6 @@ long	ft_atol(const char *str)
 
 	i = 0;
 	out = 0;
-
 	while (str[i] == '+')
 		i++;
 	while (str[i])
