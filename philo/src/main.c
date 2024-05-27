@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:53:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/27 16:53:50 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:28:54 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ int	main(int argc, char *argv[])
 {
 	t_table	table;
 
-	if (argc > 4 && argc < 7)
+	if (argc < 5 || argc > 6)
 	{
-		parse_input(&table, argv);
+		printf("Error: Incorrect number of arguments\n");
+		return (1);
 	}
+	parse_input(&table, argv);
 	/*pthread_mutex_init(&mutex, NULL);*/
 	/*(void)argv;*/
 	/*if (!pthread_create(&t1, NULL, &routine, (void *) &v1))*/
