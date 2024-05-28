@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:53:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 12:48:30 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/28 14:00:16 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char *argv[])
 		errcode = init_philos(&table);
 	if (!errcode)
 	{
-		run_sim(&table);
+		start_sim(&table);
 		safe_free(&table);
 	}
 	if (errcode)
