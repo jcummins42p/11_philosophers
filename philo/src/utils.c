@@ -1,34 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 12:02:07 by jcummins         ###   ########.fr       */
+/*   Created: 2024/05/28 11:07:49 by jcummins          #+#    #+#             */
+/*   Updated: 2024/05/28 11:46:07 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_philos(t_table *table)
+int	ft_strlen(const char *str)
 {
+	int	len;
+
+	len = 0;
+	while (str[len])
+		len++;
+	return (len);
+}
+
+long	ft_atol(const char *str)
+{
+	long	out;
 	int		i;
-	t_philo	*philo;
 
 	i = 0;
-	philo = NULL;
-	while (i < table->n_philos)
-	{
-		philo = malloc(sizeof(t_philo));
-		philo->id = i;
-		philo->l_fork = NULL;
-		philo->r_fork = NULL;
-		philo->n_meals = 0;
-		philo->full = 0;
-		philo->table = table;
+	out = 0;
+	while (str[i] == '+')
 		i++;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+		{
+			if (out)
+				return (out);
+			else
+				return (-1);
+		}
+		out = (out * 10) + (str[i++] - '0');
+		if (out > INT_MAX)
+			return (-1);
 	}
-	return (0);
+	return (out);
 }

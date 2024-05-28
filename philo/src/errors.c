@@ -6,11 +6,19 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:08:57 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/27 18:10:31 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:05:39 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	print_errcode(int errcode, int argc)
+{
+	if (errcode == N_ARGS)
+		printf("Program exit due to bad number of arguments (%d)\n", argc - 1);
+	if (errcode == BAD_ARGS)
+		printf("Program exit due to bad argument\n");
+}
 
 void	print_error(t_table *table, int err)
 {
@@ -36,24 +44,4 @@ void	print_error(t_table *table, int err)
 		printf("\tInvalid meal limit argument\n");
 	else
 		printf("\tValid meal limit: %ld\n", table->n_limit_meals);
-}
-
-int	check_input(t_table *table)
-{
-	int	invalid;
-
-	invalid = 0;
-	if (table->n_philos < 1)
-		invalid += 1;
-	if (table->time_to_die < 1)
-		invalid += 2;
-	if (table->time_to_eat < 0)
-		invalid += 4;
-	if (table->time_to_sleep < 0)
-		invalid += 8;
-	if (table->n_limit_meals < 0)
-		invalid += 16;
-	if (invalid)
-		print_error(table, invalid);
-	return (invalid);
 }

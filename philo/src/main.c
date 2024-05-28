@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:53:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/27 19:04:08 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:02:46 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,16 @@ void	*routine(void *value)
 int	main(int argc, char *argv[])
 {
 	t_table	table;
+	int		errcode;
 
+	errcode = VALID;
 	if (argc < 5 || argc > 6)
-	{
-		printf("Error: Incorrect number of arguments\n");
-		return (1);
-	}
-	parse_input(&table, argv);
-	return (0);
+		errcode = N_ARGS;
+	if (!errcode)
+		errcode = parse_input(&table, argv);
+	if (!errcode)
+		errcode = init_philos(&table);
+	if (errcode)
+		print_errcode(errcode, argc);
+	return (errcode);
 }

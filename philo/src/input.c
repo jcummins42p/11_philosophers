@@ -6,45 +6,41 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/27 19:03:25 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:05:34 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_strlen(const char *str)
+void	print_valid_input(t_table *table)
 {
-	int	len;
-
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	printf("Input valid:\n");
+	printf("\tNumber of philosophers is %ld\n", table->n_philos);
+	printf("\tTime to die is %ld\n", table->time_to_die);
+	printf("\tTime to eat is %ld\n", table->time_to_eat);
+	printf("\tTime to sleep is %ld\n", table->time_to_sleep);
+	if (table->n_limit_meals)
+		printf("\tMeal limit is %ld\n", table->n_limit_meals);
+	else
+		printf("\tNo meal limit set\n");
 }
 
-long	ft_atol(const char *str)
+int	check_input(t_table *table)
 {
-	long	out;
-	int		i;
-
-	i = 0;
-	out = 0;
-	while (str[i] == '+')
-		i++;
-	while (str[i])
-	{
-		if (str[i] < '0' || str[i] > '9')
-		{
-			if (out)
-				return (out);
-			else
-				return (-1);
-		}
-		out = (out * 10) + (str[i++] - '0');
-		if (out > INT_MAX)
-			return (-1);
-	}
-	return (out);
+	table->validity = 0;
+	if (table->n_philos < 2)
+		table->validity += 1;
+	if (table->time_to_die < 1)
+		table->validity += 2;
+	if (table->time_to_eat < 0)
+		table->validity += 4;
+	if (table->time_to_sleep < 0)
+		table->validity += 8;
+	if (table->n_limit_meals < 0)
+		table->validity += 16;
+	if (table->validity)
+		print_error(table, table->validity);
+	return (table->validity);
 }
 
 int	parse_input(t_table *table, char *argv[])
@@ -58,23 +54,8 @@ int	parse_input(t_table *table, char *argv[])
 	else
 		table->n_limit_meals = 0;
 	if (check_input(table))
-		return (1);
+		return (BAD_ARGS);
 	else
-	{
-		printf("Input valid:\n");
-		printf("\tNumber of philosophers is %ld\n", table->n_philos);
-		printf("\tTime to die is %ld\n", table->time_to_die);
-		printf("\tTime to eat is %ld\n", table->time_to_eat);
-		printf("\tTime to sleep is %ld\n", table->time_to_sleep);
-		if (table->n_limit_meals)
-			printf("\tMeal limit is %ld\n", table->n_limit_meals);
-		else
-			printf("\tNo meal limit set\n");
-	}
+		print_valid_input(table);
 	return (0);
-}
-
-void	table_init(t_table *table)
-{
-	(void)table;
 }
