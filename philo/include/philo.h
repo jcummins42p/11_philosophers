@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 12:06:15 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:51:23 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ typedef enum e_errcode
 	MALLOC_FAIL
 }	t_errcode;
 
+typedef enum e_state
+{
+	THINKING,
+	HUNGRY,
+	EATING
+}	t_state;
+
 typedef pthread_mutex_t	t_mtx;
 
 typedef struct s_table	t_table;
@@ -56,7 +63,7 @@ typedef struct s_table
 	long	start_time;
 	int		end_sim;
 	t_fork	*forks;
-	t_philo	*philos;
+	t_philo	**philos;
 	int		validity;
 }	t_table;
 
@@ -69,17 +76,18 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int			id;
+	int			state;
 	pthread_t	thread_id;
 	t_fork		*l_fork;
 	t_fork		*r_fork;
 	long		n_meals;
-	int			full;
 	long		last_meal_time;
 	t_table		*table;
 }	t_philo;
 
 //	safe_handlers.c
 void	*safe_malloc(size_t bytes);
+void	safe_free(t_table *table);
 void	safe_mutex(t_mtx *mutex, t_mutex_code mutex_code);
 void	error_mutex(int status, t_mutex_code mutex_code);
 
@@ -97,5 +105,8 @@ int		init_philos(t_table *table);
 //	utils.c
 int		ft_strlen(const char *str);
 long	ft_atol(const char *str);
+
+//	sim.c
+void	run_sim(t_table *table);
 
 #endif
