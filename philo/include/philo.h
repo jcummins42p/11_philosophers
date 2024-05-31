@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 13:57:17 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:46:52 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef enum e_state
 {
 	THINKING,
 	HUNGRY,
+	TAKING_L_FORK,
+	TAKING_R_FORK,
 	EATING,
 	DEAD
 }	t_state;
@@ -72,7 +74,7 @@ typedef struct s_table
 	long	n_limit_meals;
 	long	start_time;
 	int		end_sim;
-	t_fork	*forks;
+	t_fork	**forks;
 	t_philo	**philos;
 	t_mutex	mtx;
 	int		validity;
@@ -81,7 +83,7 @@ typedef struct s_table
 typedef struct s_fork
 {
 	t_mutex	fork;
-	int		fork_id;
+	int		id;
 }	t_fork;
 
 typedef struct s_philo
@@ -112,6 +114,7 @@ int		parse_input(t_table *table, char *argv[]);
 
 //	init.c
 int		init_philos(t_table *table);
+int		init_forks(t_table *table);
 
 //	utils.c
 int		ft_strlen(const char *str);
@@ -120,5 +123,9 @@ long	ft_atol(const char *str);
 //	sim.c
 void	run_sim(t_table *table);
 int		start_sim(t_table *table);
+
+//	main.c
+void	*take_fork(t_fork *fork, t_philo *philo);
+void	*wait(void *value);
 
 #endif

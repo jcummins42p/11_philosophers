@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 12:55:09 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:50:19 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,24 @@ int	init_philos(t_table *table)
 		philo->state = HUNGRY;
 		philo->table = table;
 		table->philos[i] = philo;
+		i++;
+	}
+	return (0);
+}
+
+int	init_forks(t_table *table)
+{
+	int		i;
+	t_fork	*fork;
+
+	i = 0;
+	fork = NULL;
+	table->forks = malloc(sizeof (t_fork *) * table->n_philos);
+	while (i < table->n_philos)
+	{
+		fork = malloc(sizeof(t_philo));
+		fork->id = i;
+		table->forks[i] = fork;
 		i++;
 	}
 	return (0);

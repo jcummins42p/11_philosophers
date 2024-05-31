@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 13:30:27 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:41:31 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_valid_input(t_table *table)
 int	check_input(t_table *table)
 {
 	table->validity = 0;
-	if (table->n_philos < 2)
+	if (table->n_philos < 1)
 		table->validity += 1;
 	if (table->time_to_die < 1)
 		table->validity += 2;
