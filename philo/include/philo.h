@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 19:51:32 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 20:31:44 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # define KMAG "\x1B[35m"
 # define KCYN "\x1B[36m"
 # define KWHT "\x1B[37m"
+
+# define USEC 1000000
 
 typedef enum e_mutex_code
 {
