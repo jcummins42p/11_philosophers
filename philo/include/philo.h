@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/31 16:46:52 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 18:10:01 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct s_table
 
 typedef struct s_fork
 {
-	t_mutex	fork;
+	t_mutex	mutex;
 	int		id;
 }	t_fork;
 
@@ -99,7 +99,7 @@ typedef struct s_philo
 }	t_philo;
 
 //	safe_handlers.c
-void	*safe_malloc(size_t bytes);
+void	*safe_malloc(size_t bytes, t_table *table);
 void	safe_free(t_table *table);
 void	safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
 void	error_mutex(int status, t_mutex_code mutex_code);
@@ -124,8 +124,13 @@ long	ft_atol(const char *str);
 void	run_sim(t_table *table);
 int		start_sim(t_table *table);
 
+//	splash.c
+void	splash(void);
+
 //	main.c
-void	*take_fork(t_fork *fork, t_philo *philo);
+void	*take_left_fork(t_table *table, t_philo *philo);
+void	*take_right_fork(t_table *table, t_philo *philo);
+void	*take_fork(t_table *table, t_fork *fork, t_philo *philo);
 void	*wait(void *value);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:46:04 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/31 16:08:57 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:39:04 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*safe_malloc(size_t bytes)
+void	*safe_malloc(size_t bytes, t_table *table)
 {
 	void	*ret;
 
@@ -20,7 +20,8 @@ void	*safe_malloc(size_t bytes)
 	if (!ret)
 	{
 		printf("Malloc error\n");
-		return (NULL);
+		safe_free(table);
+		exit (MALLOC_FAIL);
 	}
 	return (ret);
 }

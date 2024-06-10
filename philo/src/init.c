@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/31 16:50:19 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 17:27:36 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	init_forks(t_table *table)
 	{
 		fork = malloc(sizeof(t_philo));
 		fork->id = i;
+		pthread_mutex_init(&fork->mutex, NULL);
 		table->forks[i] = fork;
 		i++;
 	}

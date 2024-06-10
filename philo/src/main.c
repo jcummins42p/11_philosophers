@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:53:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/31 16:54:22 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 18:58:35 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,42 @@ void	*wait(void *value)
 	return (NULL);
 }
 
-void	*take_fork(t_fork *fork, t_philo *philo)
+void *take_left_fork(t_table *table, t_philo *philo)
 {
+	int			target;
+	pthread_t	*out;
+
+	target = philo->id;
+	out = take_fork(table, table->forks[target], philo);
+	return (out);
+}
+
+void *take_right_fork(t_table *table, t_philo *philo)
+{
+	int 		target;
+	pthread_t	*out;
+
+	target = (philo->id + 1) % table->n_philos;
+	out = take_fork(table, table->forks[target], philo);
+	return (out);
+}
+
+void *take_fork(t_table *table, t_fork *fork, t_philo *philo)
+{
+	pthread_mutex_lock(&fork->mutex);
 	if (fork->id == philo->id)
-		printf("Philo has taken the fork to their LEFT\n");
-	else if (fork->id == philo->id + 1)
-		printf("Philo has taken the fork to their RIGHT\n");
+	{
+		philo->l_fork = fork;
+		printf("Philo %d has taken the fork to their LEFT\n", philo->id);
+	}
+	else if (fork->id == (philo->id + 1) % table->n_philos)
+	{
+		philo->r_fork = fork;
+		printf("Philo %d has taken the fork to their RIGHT\n", philo->id);
+	}
 	else
-		printf("Philo %d has taken A FORBIDDEN FORK (%d)\n", philo->id, fork->id);
+		printf("Philo %d got A FORBIDDEN FORK (%d)\n", philo->id, fork->id);
+	pthread_mutex_unlock(&fork->mutex);
 	return (NULL);
 }
 
@@ -48,7 +76,11 @@ int	main(int argc, char *argv[])
 	if (!errcode)
 		errcode = init_philos(&table);
 	if (!errcode)
+		errcode = init_forks(&table);
+	if (!errcode)
 	{
+		splash();
+		sleep(4);
 		start_sim(&table);
 		safe_free(&table);
 	}

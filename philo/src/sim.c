@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/31 16:41:28 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 17:19:52 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,12 @@ int	start_sim(t_table *table)
 			i = 0;
 			while (i < table->n_philos)
 			{
-				table->philos[i]->thread_id = (pthread_t)wait(&i);
-				table->philos[i]->thread_id = (pthread_t)take_fork(table->forks[i], table->philos[i]);
+				/*table->philos[i]->thread_id = (pthread_t)wait(&i);*/
+				/*table->philos[i]->thread_id = i;*/
+				/*table->philos[i]*/
+				/*table->philos[i]->thread_id = (pthread_t)take_fork(table->forks[i], table->philos[i]);*/
+				table->philos[i]->thread_id = (pthread_t)take_left_fork(table, table->philos[i]);
+				table->philos[i]->thread_id = (pthread_t)take_right_fork(table, table->philos[i]);
 				gettimeofday(t_simstart, NULL);
 				printf("Sim starting at %ld, %ld\n", t_simstart->tv_sec, t_simstart->tv_usec);
 				if (table->philos[i]->state == THINKING)
