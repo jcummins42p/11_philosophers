@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:53:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 18:58:35 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 20:23:34 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int argc, char *argv[])
 	if (!errcode)
 	{
 		splash();
-		sleep(4);
+		pusleep(8000000);
 		start_sim(&table);
 		safe_free(&table);
 	}

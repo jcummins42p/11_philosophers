@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 18:10:01 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 19:51:32 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ typedef enum e_errcode
 	VALID,
 	N_ARGS,
 	BAD_ARGS,
-	MALLOC_FAIL
+	MALLOC_FAIL,
+	TIME_FAIL
 }	t_errcode;
 
 typedef enum e_state
@@ -105,6 +106,7 @@ void	safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
 void	error_mutex(int status, t_mutex_code mutex_code);
 
 //	errors.c
+void	error_exit(int errcode);
 int		check_input(t_table *table);
 void	print_errcode(int errcode, int argc);
 void	print_error(t_table *table, int err);
@@ -126,6 +128,9 @@ int		start_sim(t_table *table);
 
 //	splash.c
 void	splash(void);
+
+//	psleep.c
+void	pusleep(unsigned int remaining);
 
 //	main.c
 void	*take_left_fork(t_table *table, t_philo *philo);

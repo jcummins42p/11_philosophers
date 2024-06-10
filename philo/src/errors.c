@@ -6,11 +6,18 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:08:57 by jcummins          #+#    #+#             */
-/*   Updated: 2024/05/28 13:29:23 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/10 19:48:47 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	error_exit(int errcode)
+{
+	if (errcode == TIME_FAIL)
+		printf("Gettimeofday failed\n");
+	exit (errcode);
+}
 
 void	print_errcode(int errcode, int argc)
 {
@@ -18,6 +25,7 @@ void	print_errcode(int errcode, int argc)
 		printf(KRED "Exit: bad number of arguments (%d)\n" KDEF, argc - 1);
 	if (errcode == BAD_ARGS)
 		printf(KRED "Exit: due to bad argument\n" KDEF);
+	exit (errcode);
 }
 
 void	print_error(t_table *table, int err)
