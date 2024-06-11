@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 20:55:47 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/11 20:36:29 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 unsigned int	get_time_since(struct timeval t_start)
 {
 	struct timeval	t_curr;
-	unsigned int	elapsed;
+	t_timestamp		elapsed;
 
 	if (gettimeofday(&t_curr, NULL))
 		error_exit(TIME_FAIL);
@@ -27,7 +27,7 @@ unsigned int	get_time_since(struct timeval t_start)
 void	pusleep(unsigned int total)
 {
 	struct timeval	t_start;
-	unsigned int	elapsed;
+	t_timestamp		elapsed;
 
 	elapsed = 0;
 	if (gettimeofday(&t_start, NULL))
@@ -35,7 +35,7 @@ void	pusleep(unsigned int total)
 	while (elapsed < total)
 	{
 		elapsed = get_time_since(t_start);
-		printf("%d elapsed in current sleep\n", elapsed);
+		/*printf("%d elapsed in current sleep\n", elapsed);*/
 		if ((int)(total - elapsed) < 500)
 		{
 			while (elapsed <= total)
@@ -43,7 +43,7 @@ void	pusleep(unsigned int total)
 				elapsed = get_time_since(t_start);
 				if (elapsed >= total)
 				{
-					printf("Slept %d and returning\n", elapsed);
+					/*printf("Slept %d and returning\n", elapsed);*/
 					return ;
 				}
 			}

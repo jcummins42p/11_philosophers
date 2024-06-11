@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 20:31:44 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/11 20:22:12 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/types.h>
 # include <sys/time.h>
 # include <limits.h>
+# include <stdbool.h>
 
 # define KDEF "\x1B[0m"
 # define KRED "\x1B[31m"
@@ -56,6 +57,7 @@ typedef enum e_state
 {
 	THINKING,
 	HUNGRY,
+	SLEEPING,
 	TAKING_L_FORK,
 	TAKING_R_FORK,
 	EATING,
@@ -67,20 +69,21 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
 typedef struct s_fork	t_fork;
+typedef unsigned int	t_timestamp;
 
 typedef struct s_table
 {
-	long	n_philos;
-	long	time_to_die;
-	long	time_to_eat;
-	long	time_to_sleep;
-	long	n_limit_meals;
-	long	start_time;
-	int		end_sim;
-	t_fork	**forks;
-	t_philo	**philos;
-	t_mutex	mtx;
-	int		validity;
+	long			n_philos;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
+	long			n_limit_meals;
+	struct timeval	start_time;
+	bool			end_sim;
+	t_fork			**forks;
+	t_philo			**philos;
+	t_mutex			mutex;
+	int				validity;
 }	t_table;
 
 typedef struct s_fork
@@ -92,12 +95,13 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int			id;
-	int			state;
+	int			status;
 	pthread_t	thread_id;
 	t_fork		*l_fork;
 	t_fork		*r_fork;
 	long		n_meals;
 	long		last_meal_time;
+	bool		full;
 	t_table		*table;
 }	t_philo;
 
@@ -132,12 +136,16 @@ int		start_sim(t_table *table);
 void	splash(void);
 
 //	psleep.c
+t_timestamp	get_time_since(struct timeval t_start);
 void	pusleep(unsigned int remaining);
 
-//	main.c
+//	routines.c
 void	*take_left_fork(t_table *table, t_philo *philo);
 void	*take_right_fork(t_table *table, t_philo *philo);
 void	*take_fork(t_table *table, t_fork *fork, t_philo *philo);
-void	*wait(void *value);
+void	*routine_think(t_table *table);
+void	*routine_sleep(t_table *table, t_philo *philo);
+void	*routine_eat(t_table *table, t_philo *philo);
+void	*routine_run(t_table *table, t_philo *philo);
 
 #endif
