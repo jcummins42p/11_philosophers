@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 13:23:47 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:48:55 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ typedef enum e_errcode
 	TIME_FAIL
 }	t_errcode;
 
+typedef enum e_endcode
+{
+	RUNNING,
+	END_FULL,
+	END_DEAD
+}	t_endcode;
+
 typedef enum e_state
 {
 	THINKING,
@@ -79,11 +86,12 @@ typedef struct s_table
 	long			time_to_sleep;
 	long			n_limit_meals;
 	struct timeval	start_time;
-	bool			end_sim;
+	int				end_sim;
 	t_fork			**forks;
 	t_philo			**philos;
 	t_mutex			mutex;
 	int				validity;
+	pthread_t		monitor_id;
 }	t_table;
 
 typedef struct s_fork
@@ -100,8 +108,9 @@ typedef struct s_philo
 	t_fork		*l_fork;
 	t_fork		*r_fork;
 	long		n_meals;
-	long		last_meal_time;
+	t_timestamp	last_meal_time;
 	bool		full;
+	bool		dead;
 	t_table		*table;
 }	t_philo;
 
@@ -147,5 +156,8 @@ void	*routine_think(t_table *table);
 void	*routine_sleep(t_table *table, t_philo *philo);
 void	*routine_eat(t_table *table, t_philo *philo);
 void	*routine_run(void *arg);
+
+//	monitor.c
+void	*routine_monitor(void *arg);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 14:44:54 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:22:44 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,18 @@ void	*routine_sleep(t_table *table, t_philo *philo)
 	t_timestamp	sleep_start;
 
 	sleep_start = get_time_since(table->start_time);
-	philo->status = SLEEPING;
-	printf("%-10d %-4d SLEEPING\n", sleep_start, philo->id + 1);
-	pusleep(table->time_to_sleep - 4);
+	if ((sleep_start + table->time_to_sleep) > philo->last_meal_time + table->time_to_die)
+	{
+		printf("Philo %d will die in their sleep\n", philo->id + 1);
+		philo->dead = true;
+		philo->status = DEAD;
+	}
+	else
+	{
+		philo->status = SLEEPING;
+		printf("%-10d %-4d SLEEPING\n", sleep_start, philo->id + 1);
+		pusleep(table->time_to_sleep - 4);
+	}
 	return (NULL);
 }
 
@@ -65,17 +74,19 @@ void	*routine_eat(t_table *table, t_philo *philo)
 {
 	t_timestamp	eat_start;
 
-	eat_start = get_time_since(table->start_time);
-	philo->status = EATING;
-	printf("%-10d %-4d EATING\n", eat_start, philo->id + 1);
-	pusleep(table->time_to_eat - 4);
-	philo->n_meals += 1;
-	if (philo->n_meals == table->n_limit_meals)
-		philo->full = true;
-	pthread_mutex_unlock(&philo->l_fork->mutex);
-	philo->l_fork = NULL;
-	pthread_mutex_unlock(&philo->r_fork->mutex);
-	philo->r_fork = NULL;
+	if (philo->status != DEAD)
+	{
+		eat_start = get_time_since(table->start_time);
+		philo->last_meal_time = eat_start;
+		philo->status = EATING;
+		printf("%-10d %-4d EATING\n", eat_start, philo->id + 1);
+		pusleep(table->time_to_eat - 4);
+		philo->n_meals += 1;
+		pthread_mutex_unlock(&philo->l_fork->mutex);
+		philo->l_fork = NULL;
+		pthread_mutex_unlock(&philo->r_fork->mutex);
+		philo->r_fork = NULL;
+	}
 	return (NULL);
 }
 
@@ -86,7 +97,7 @@ void	*routine_run(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	while (philo->full == false)
+	while (philo->full == false && !philo->table->end_sim)
 	{
 		if (philo->id % 2 && !philo->l_fork && !philo->r_fork)
 			routine_sleep(table, philo);
@@ -95,13 +106,11 @@ void	*routine_run(void *arg)
 			routine_eat(table, philo);
 			routine_sleep(table, philo);
 		}
-		else
+		else if (philo->status != DEAD)
 		{
 			take_left_fork(table, philo);
 			take_right_fork(table, philo);
 		}
 	}
-	if (philo->full == true)
-		printf("Philo %d is full\n", philo->id + 1);
 	return (NULL);
 }

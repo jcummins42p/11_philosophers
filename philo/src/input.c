@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/11 19:46:02 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:55:42 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	parse_input(t_table *table, char *argv[])
 		table->n_limit_meals = ft_atol(argv[5]);
 	else
 		table->n_limit_meals = 0;
-	table->end_sim = false;
+	table->end_sim = RUNNING;
 	pthread_mutex_init(&table->mutex, NULL);
 	if (check_input(table))
 		return (BAD_ARGS);
