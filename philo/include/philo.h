@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/11 20:22:12 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 13:23:47 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,6 @@ void	*take_fork(t_table *table, t_fork *fork, t_philo *philo);
 void	*routine_think(t_table *table);
 void	*routine_sleep(t_table *table, t_philo *philo);
 void	*routine_eat(t_table *table, t_philo *philo);
-void	*routine_run(t_table *table, t_philo *philo);
+void	*routine_run(void *arg);
 
 #endif

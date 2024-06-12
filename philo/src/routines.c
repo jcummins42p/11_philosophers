@@ -6,48 +6,47 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/11 20:18:34 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:44:54 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void *take_left_fork(t_table *table, t_philo *philo)
+void	*take_left_fork(t_table *table, t_philo *philo)
 {
 	int			target;
 	pthread_t	*out;
+	t_timestamp	lfork_start;
 
+	lfork_start = get_time_since(table->start_time);
+	printf("%-10d %-4d taking left fork\n", lfork_start, philo->id + 1);
 	target = philo->id;
 	out = take_fork(table, table->forks[target], philo);
 	return (out);
 }
 
-void *take_right_fork(t_table *table, t_philo *philo)
+void	*take_right_fork(t_table *table, t_philo *philo)
 {
-	int 		target;
+	int			target;
 	pthread_t	*out;
+	t_timestamp	rfork_start;
 
+	rfork_start = get_time_since(table->start_time);
+	printf("%-10d %-4d taking right fork\n", rfork_start, philo->id + 1);
 	target = (philo->id + 1) % table->n_philos;
 	out = take_fork(table, table->forks[target], philo);
 	return (out);
 }
 
-void *take_fork(t_table *table, t_fork *fork, t_philo *philo)
+void	*take_fork(t_table *table, t_fork *fork, t_philo *philo)
 {
 	pthread_mutex_lock(&fork->mutex);
 	if (fork->id == philo->id)
-	{
 		philo->l_fork = fork;
-		printf("Philo %d has taken the fork to their LEFT\n", philo->id);
-	}
 	else if (fork->id == (philo->id + 1) % table->n_philos)
-	{
 		philo->r_fork = fork;
-		printf("Philo %d has taken the fork to their RIGHT\n", philo->id);
-	}
 	else
-		printf("Philo %d got A FORBIDDEN FORK (%d)\n", philo->id, fork->id);
-	pthread_mutex_unlock(&fork->mutex);
+		printf("Philo %d got A FORBIDDEN FORK (%d)\n", philo->id + 1, fork->id);
 	return (NULL);
 }
 
@@ -57,8 +56,8 @@ void	*routine_sleep(t_table *table, t_philo *philo)
 
 	sleep_start = get_time_since(table->start_time);
 	philo->status = SLEEPING;
-	printf("%d %d SLEEPING\n", sleep_start, philo->id);
-	pusleep(table->time_to_sleep);
+	printf("%-10d %-4d SLEEPING\n", sleep_start, philo->id + 1);
+	pusleep(table->time_to_sleep - 4);
 	return (NULL);
 }
 
@@ -68,22 +67,41 @@ void	*routine_eat(t_table *table, t_philo *philo)
 
 	eat_start = get_time_since(table->start_time);
 	philo->status = EATING;
-	printf("%d %d EATING\n", eat_start, philo->id);
-	pusleep(table->time_to_eat);
+	printf("%-10d %-4d EATING\n", eat_start, philo->id + 1);
+	pusleep(table->time_to_eat - 4);
 	philo->n_meals += 1;
 	if (philo->n_meals == table->n_limit_meals)
 		philo->full = true;
-	return(NULL);
+	pthread_mutex_unlock(&philo->l_fork->mutex);
+	philo->l_fork = NULL;
+	pthread_mutex_unlock(&philo->r_fork->mutex);
+	philo->r_fork = NULL;
+	return (NULL);
 }
 
-void	*routine_run(t_table *table, t_philo *philo)
+void	*routine_run(void *arg)
 {
+	t_philo	*philo;
+	t_table	*table;
+
+	philo = (t_philo *)arg;
+	table = philo->table;
 	while (philo->full == false)
 	{
-		routine_sleep(table, philo);
-		routine_eat(table, philo);
+		if (philo->id % 2 && !philo->l_fork && !philo->r_fork)
+			routine_sleep(table, philo);
+		if (philo->l_fork && philo->r_fork)
+		{
+			routine_eat(table, philo);
+			routine_sleep(table, philo);
+		}
+		else
+		{
+			take_left_fork(table, philo);
+			take_right_fork(table, philo);
+		}
 	}
 	if (philo->full == true)
-	printf("Philo %d is full\n", philo->id);
+		printf("Philo %d is full\n", philo->id + 1);
 	return (NULL);
 }
