@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 17:40:45 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:27:10 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct s_table
 	long			time_to_sleep;
 	long			n_limit_meals;
 	struct timeval	start_time;
-	int				end_sim;
+	int				sim_status;
 	t_fork			**forks;
 	t_philo			**philos;
 	t_mutex			mutex;
@@ -110,8 +110,6 @@ typedef struct s_philo
 	t_fork		*r_fork;
 	long		n_meals;
 	t_timestamp	last_meal_time;
-	bool		full;
-	bool		dead;
 	t_table		*table;
 }	t_philo;
 

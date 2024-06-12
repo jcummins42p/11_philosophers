@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 18:09:14 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:50:08 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	*take_left_fork(t_table *table, t_philo *philo)
 	t_timestamp	lfork_start;
 
 	lfork_start = get_time_since(table->start_time);
-	printf("%-10d %-4d taking left fork\n", lfork_start, philo->id);
 	target = philo->id;
 	out = take_fork(table, table->forks[target], philo);
+	printf("%-10d %-4d taken left fork\n", lfork_start, philo->id + 1);
 	return (out);
 }
 
@@ -32,9 +32,9 @@ void	*take_right_fork(t_table *table, t_philo *philo)
 	t_timestamp	rfork_start;
 
 	rfork_start = get_time_since(table->start_time);
-	printf("%-10d %-4d taking right fork\n", rfork_start, philo->id);
-	target = (philo->id) % table->n_philos;
+	target = (philo->id + 1) % table->n_philos;
 	out = take_fork(table, table->forks[target], philo);
+	printf("%-10d %-4d taken right fork\n", rfork_start, philo->id + 1);
 	return (out);
 }
 
@@ -66,6 +66,7 @@ void	*routine_sleep(t_table *table, t_philo *philo)
 		philo->status = SLEEPING;
 		printf("%-10d %-4d SLEEPING\n", sleep_start, philo->id + 1);
 		pusleep(table->time_to_sleep - 4);
+		philo->status = HUNGRY;
 	}
 	return (NULL);
 }
@@ -98,22 +99,27 @@ void	*routine_run(void *arg)
 	philo = (t_philo *)arg;
 	table = philo->table;
 	philo->last_meal_time = get_time_since(philo->table->start_time);
+	printf("Setting philo %d last meal time to %d\n", philo->id, philo->last_meal_time);
 	if (philo->id % 2)
 		routine_sleep(table, philo);
-	while (philo->status != FULL && philo->status != DEAD && !philo->table->end_sim)
+	while (philo->status != FULL && philo->status != DEAD && philo->table->sim_status == RUNNING)
 	{
-		if (philo->l_fork && philo->r_fork && philo->status != DEAD)
+		if (philo->l_fork && philo->r_fork && philo->status == HUNGRY)
 		{
 			routine_eat(table, philo);
 			routine_sleep(table, philo);
 		}
-		else while (philo->status != DEAD && !(philo->l_fork && philo->r_fork))
-		{
-			if (!philo->l_fork)
-				take_left_fork(table, philo);
-			if (!philo->r_fork)
-				take_right_fork(table, philo);
-		}
+		/*while (philo->status == HUNGRY && !(philo->l_fork && philo->r_fork))*/
+		/*{*/
+			/*if (!philo->l_fork)*/
+				/*take_left_fork(table, philo);*/
+			/*if (!philo->r_fork)*/
+				/*take_right_fork(table, philo);*/
+			/*if (philo->r_fork && philo->l_fork)*/
+				/*break;*/
+		/*}*/
+		take_left_fork(table, philo);
+		take_right_fork(table, philo);
 	}
 	return (NULL);
 }
