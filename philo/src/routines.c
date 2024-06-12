@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 18:50:08 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 19:07:54 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	*routine_eat(t_table *table, t_philo *philo)
 		eat_start = get_time_since(table->start_time);
 		philo->last_meal_time = eat_start + table->time_to_eat;
 		philo->status = EATING;
-		printf("%-10d %-4d EATING\n", eat_start, philo->id + 1);
+		printf("%-10d %-4d EATING meal %d of %d\n", eat_start, philo->id + 1, philo->n_meals + 1, table->n_limit_meals);
 		pusleep(table->time_to_eat - 4);
 		philo->n_meals += 1;
 		pthread_mutex_unlock(&philo->l_fork->mutex);

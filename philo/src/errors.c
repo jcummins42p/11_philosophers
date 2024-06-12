@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:08:57 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 19:48:47 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 19:06:48 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,5 @@ void	print_error(t_table *table, int err)
 	if ((err >> 4) & 1)
 		printf(KRED "\tInvalid meal limit argument\n" KDEF);
 	else
-		printf(KGRN "\tValid meal limit: %ld\n" KDEF, table->n_limit_meals);
+		printf(KGRN "\tValid meal limit: %d\n" KDEF, table->n_limit_meals);
 }

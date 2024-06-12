@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 18:50:55 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 19:07:39 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,13 @@ void	*routine_monitor(void *arg)
 	while (table->sim_status == RUNNING)
 	{
 		i = 0;
-		while (i < table->n_philos)
+		while (i < table->n_philos && table->sim_status == RUNNING)
 		{
 			curr_time = get_time_since(table->start_time);
 			if (table->philos[i]->status == DEAD)
-			{
 				table->sim_status = END_DEAD;
-			}
 			else if (table->philos[i]->status == HUNGRY && curr_time - table->philos[i]->last_meal_time >= table->time_to_die)
 			{
-				printf("Current time: %d\nPhilo %d last meal time: %d\nTime to die: %ld\n", curr_time, table->philos[i]->id, table->philos[i]->last_meal_time, table->time_to_die);
 				printf("\tMonitor: Philo %d is dead\n", table->philos[i]->id);
 				table->philos[i]->status = DEAD;
 			}

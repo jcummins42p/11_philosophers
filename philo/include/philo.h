@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 18:27:10 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 19:06:11 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_table
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
-	long			n_limit_meals;
+	int				n_limit_meals;
 	struct timeval	start_time;
 	int				sim_status;
 	t_fork			**forks;
@@ -104,11 +104,11 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int			id;
-	int			status;
 	pthread_t	thread_id;
+	int			status;
 	t_fork		*l_fork;
 	t_fork		*r_fork;
-	long		n_meals;
+	int			n_meals;
 	t_timestamp	last_meal_time;
 	t_table		*table;
 }	t_philo;
