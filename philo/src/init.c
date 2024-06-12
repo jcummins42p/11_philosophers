@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/11 20:05:43 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:09:20 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	init_philos(t_table *table)
 		philo->status = HUNGRY;
 		philo->full = false;
 		philo->table = table;
+		philo->dead = false;
 		table->philos[i] = philo;
 		i++;
 	}

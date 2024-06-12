@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 17:22:44 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:09:14 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*take_left_fork(t_table *table, t_philo *philo)
 	t_timestamp	lfork_start;
 
 	lfork_start = get_time_since(table->start_time);
-	printf("%-10d %-4d taking left fork\n", lfork_start, philo->id + 1);
+	printf("%-10d %-4d taking left fork\n", lfork_start, philo->id);
 	target = philo->id;
 	out = take_fork(table, table->forks[target], philo);
 	return (out);
@@ -32,8 +32,8 @@ void	*take_right_fork(t_table *table, t_philo *philo)
 	t_timestamp	rfork_start;
 
 	rfork_start = get_time_since(table->start_time);
-	printf("%-10d %-4d taking right fork\n", rfork_start, philo->id + 1);
-	target = (philo->id + 1) % table->n_philos;
+	printf("%-10d %-4d taking right fork\n", rfork_start, philo->id);
+	target = (philo->id) % table->n_philos;
 	out = take_fork(table, table->forks[target], philo);
 	return (out);
 }
@@ -55,13 +55,13 @@ void	*routine_sleep(t_table *table, t_philo *philo)
 	t_timestamp	sleep_start;
 
 	sleep_start = get_time_since(table->start_time);
-	if ((sleep_start + table->time_to_sleep) > philo->last_meal_time + table->time_to_die)
-	{
-		printf("Philo %d will die in their sleep\n", philo->id + 1);
-		philo->dead = true;
-		philo->status = DEAD;
-	}
-	else
+	/*if (sleep_start + table->time_to_sleep > philo->last_meal_time + table->time_to_die)*/
+	/*{*/
+		/*printf("Philo %d will die in their sleep\n", philo->id + 1);*/
+		/*philo->dead = true;*/
+		/*philo->status = DEAD;*/
+	/*}*/
+	/*else*/
 	{
 		philo->status = SLEEPING;
 		printf("%-10d %-4d SLEEPING\n", sleep_start, philo->id + 1);
@@ -77,7 +77,7 @@ void	*routine_eat(t_table *table, t_philo *philo)
 	if (philo->status != DEAD)
 	{
 		eat_start = get_time_since(table->start_time);
-		philo->last_meal_time = eat_start;
+		philo->last_meal_time = eat_start + table->time_to_eat;
 		philo->status = EATING;
 		printf("%-10d %-4d EATING\n", eat_start, philo->id + 1);
 		pusleep(table->time_to_eat - 4);
@@ -97,19 +97,22 @@ void	*routine_run(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	while (philo->full == false && !philo->table->end_sim)
+	philo->last_meal_time = get_time_since(philo->table->start_time);
+	if (philo->id % 2)
+		routine_sleep(table, philo);
+	while (philo->status != FULL && philo->status != DEAD && !philo->table->end_sim)
 	{
-		if (philo->id % 2 && !philo->l_fork && !philo->r_fork)
-			routine_sleep(table, philo);
-		if (philo->l_fork && philo->r_fork)
+		if (philo->l_fork && philo->r_fork && philo->status != DEAD)
 		{
 			routine_eat(table, philo);
 			routine_sleep(table, philo);
 		}
-		else if (philo->status != DEAD)
+		else while (philo->status != DEAD && !(philo->l_fork && philo->r_fork))
 		{
-			take_left_fork(table, philo);
-			take_right_fork(table, philo);
+			if (!philo->l_fork)
+				take_left_fork(table, philo);
+			if (!philo->r_fork)
+				take_right_fork(table, philo);
 		}
 	}
 	return (NULL);

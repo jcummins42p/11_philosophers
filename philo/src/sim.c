@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 17:03:05 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:54:16 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ int	start_sim(t_table *table)
 			i++;
 		}
 		pthread_create(&table->monitor_id, NULL, &routine_monitor, table);
-		pusleep(200000000);
+		while (table->end_sim == RUNNING)
+			;
 	}
 	return 0;
 }

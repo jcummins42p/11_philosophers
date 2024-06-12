@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 16:48:55 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:40:45 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef enum e_state
 	TAKING_L_FORK,
 	TAKING_R_FORK,
 	EATING,
+	FULL,
 	DEAD
 }	t_state;
 
