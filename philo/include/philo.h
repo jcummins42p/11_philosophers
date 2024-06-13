@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 19:06:11 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:38:25 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ typedef struct s_table
 	long			time_to_sleep;
 	int				n_limit_meals;
 	struct timeval	start_time;
+	t_timestamp		starting_line;
 	int				sim_status;
 	t_fork			**forks;
 	t_philo			**philos;
@@ -114,49 +115,49 @@ typedef struct s_philo
 }	t_philo;
 
 //	safe_handlers.c
-void	*safe_malloc(size_t bytes, t_table *table);
-void	safe_free(t_table *table);
-void	safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
-void	error_mutex(int status, t_mutex_code mutex_code);
+void		*safe_malloc(size_t bytes, t_table *table);
+void		safe_free(t_table *table);
+void		safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
+void		error_mutex(int status, t_mutex_code mutex_code);
 
 //	errors.c
-void	error_exit(int errcode);
-int		check_input(t_table *table);
-void	print_errcode(int errcode, int argc);
-void	print_error(t_table *table, int err);
+void		error_exit(int errcode);
+int			check_input(t_table *table);
+void		print_errcode(int errcode, int argc);
+void		print_error(t_table *table, int err);
 
 //	parse_input.c
-int		parse_input(t_table *table, char *argv[]);
+int			parse_input(t_table *table, char *argv[]);
 
 //	init.c
-int		init_philos(t_table *table);
-int		init_forks(t_table *table);
+int			init_philos(t_table *table);
+int			init_forks(t_table *table);
 
 //	utils.c
-int		ft_strlen(const char *str);
-long	ft_atol(const char *str);
+int			ft_strlen(const char *str);
+long		ft_atol(const char *str);
 
 //	sim.c
-void	run_sim(t_table *table);
-int		start_sim(t_table *table);
+void		run_sim(t_table *table);
+int			start_sim(t_table *table);
 
 //	splash.c
-void	splash(void);
+void		splash(void);
 
 //	psleep.c
-t_timestamp	get_time_since(struct timeval t_start);
-void	pusleep(unsigned int remaining);
+t_timestamp	ts_since_tv(struct timeval t_start);
+void		pusleep(unsigned int remaining);
 
 //	routines.c
-void	*take_left_fork(t_table *table, t_philo *philo);
-void	*take_right_fork(t_table *table, t_philo *philo);
-void	*take_fork(t_table *table, t_fork *fork, t_philo *philo);
-void	*routine_think(t_table *table);
-void	*routine_sleep(t_table *table, t_philo *philo);
-void	*routine_eat(t_table *table, t_philo *philo);
-void	*routine_run(void *arg);
+void		*take_left_fork(t_table *table, t_philo *philo);
+void		*take_right_fork(t_table *table, t_philo *philo);
+void		*take_fork(t_table *table, t_fork *fork, t_philo *philo);
+void		*routine_think(t_table *table);
+void		*routine_sleep(t_table *table, t_philo *philo);
+void		*routine_eat(t_table *table, t_philo *philo);
+void		*routine_run(void *arg);
 
 //	monitor.c
-void	*routine_monitor(void *arg);
+void		*routine_monitor(void *arg);
 
 #endif

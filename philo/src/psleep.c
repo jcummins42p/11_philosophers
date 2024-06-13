@@ -6,13 +6,13 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/11 20:36:29 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:38:57 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-unsigned int	get_time_since(struct timeval t_start)
+unsigned int	ts_since_tv(struct timeval t_start)
 {
 	struct timeval	t_curr;
 	t_timestamp		elapsed;
@@ -21,6 +21,17 @@ unsigned int	get_time_since(struct timeval t_start)
 		error_exit(TIME_FAIL);
 	elapsed = (t_curr.tv_sec - t_start.tv_sec) * USEC + \
 				(t_curr.tv_usec - t_start.tv_usec);
+	return (elapsed);
+}
+
+unsigned int	ts_since_ts(t_timestamp t_start)
+{
+	struct timeval	t_curr;
+	t_timestamp		elapsed;
+
+	if (gettimeofday(&t_curr, NULL))
+		error_exit(TIME_FAIL);
+	elapsed = ((t_curr.tv_sec * USEC) + t_curr.tv_usec) - t_start;
 	return (elapsed);
 }
 
@@ -34,13 +45,13 @@ void	pusleep(unsigned int total)
 		error_exit(TIME_FAIL);
 	while (elapsed < total)
 	{
-		elapsed = get_time_since(t_start);
+		elapsed = ts_since_tv(t_start);
 		/*printf("%d elapsed in current sleep\n", elapsed);*/
 		if ((int)(total - elapsed) < 500)
 		{
 			while (elapsed <= total)
 			{
-				elapsed = get_time_since(t_start);
+				elapsed = ts_since_tv(t_start);
 				if (elapsed >= total)
 				{
 					/*printf("Slept %d and returning\n", elapsed);*/

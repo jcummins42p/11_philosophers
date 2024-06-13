@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 18:26:49 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:39:18 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	run_sim(t_table *table)
 
 int	start_sim(t_table *table)
 {
-	int	i;
+	int			i;
 
 	if (table->n_limit_meals == 0)
 		return 0;
@@ -29,8 +29,8 @@ int	start_sim(t_table *table)
 	{
 		if (gettimeofday(&table->start_time, NULL))
 			error_exit(TIME_FAIL);
+		table->starting_line = ts_since_tv(table->start_time) + 1000;
 		i = 0;
-		/*printf("Sim starting at %ld, %ld\n", table->start_time.tv_sec, table->start_time.tv_usec);*/
 		while (i < table->n_philos)
 		{
 			pthread_create(&table->philos[i]->thread_id, NULL, &routine_run, table->philos[i]);
@@ -38,7 +38,15 @@ int	start_sim(t_table *table)
 		}
 		pthread_create(&table->monitor_id, NULL, &routine_monitor, table);
 		while (table->sim_status == RUNNING)
-			;
+			usleep(1000);
+		if (table->sim_status != RUNNING)
+		{
+			printf("Simulation registers end of simulation\n");
+			i = 0;
+			while (i < table->n_philos)
+				pthread_join(table->philos[i++]->thread_id, NULL);
+		}
+		pthread_join(table->philos[i++]->thread_id, NULL);
 	}
 	return 0;
 }
