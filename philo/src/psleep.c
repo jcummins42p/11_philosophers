@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 14:38:57 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 16:33:27 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,9 @@ unsigned int	ts_since_tv(struct timeval t_start)
 	return (elapsed);
 }
 
-unsigned int	ts_since_ts(t_timestamp t_start)
+unsigned int	ts_since_ts(t_timestamp t_start, t_timestamp t_end)
 {
-	struct timeval	t_curr;
-	t_timestamp		elapsed;
-
-	if (gettimeofday(&t_curr, NULL))
-		error_exit(TIME_FAIL);
-	elapsed = ((t_curr.tv_sec * USEC) + t_curr.tv_usec) - t_start;
-	return (elapsed);
+	return (t_end - t_start);
 }
 
 void	pusleep(unsigned int total)

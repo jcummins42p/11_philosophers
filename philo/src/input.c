@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 19:06:30 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 15:56:47 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	print_valid_input(t_table *table)
 {
+	usleep(1000000);
 	printf(KGRN "Input valid:\n");
 	printf("\tNumber of philosophers is %ld\n", table->n_philos);
 	printf("\tTime to die is %ld\n", table->time_to_die);
@@ -24,6 +25,7 @@ void	print_valid_input(t_table *table)
 	else
 		printf("\tNo meal limit set\n");
 	printf(KDEF);
+	usleep(3000000);
 }
 
 int	check_input(t_table *table)
@@ -59,6 +61,5 @@ int	parse_input(t_table *table, char *argv[])
 	if (check_input(table))
 		return (BAD_ARGS);
 	else
-		print_valid_input(table);
-	return (0);
+		return (0);
 }

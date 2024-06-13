@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 14:38:25 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:09:51 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define KWHT "\x1B[37m"
 
 # define USEC 1000000
+# define MSEC 1000
 
 typedef enum e_mutex_code
 {
@@ -91,9 +92,9 @@ typedef struct s_table
 	int				sim_status;
 	t_fork			**forks;
 	t_philo			**philos;
-	t_mutex			mutex;
 	int				validity;
 	pthread_t		monitor_id;
+	t_mutex			mutex;
 }	t_table;
 
 typedef struct s_fork
@@ -112,6 +113,7 @@ typedef struct s_philo
 	int			n_meals;
 	t_timestamp	last_meal_time;
 	t_table		*table;
+	t_mutex		mutex;
 }	t_philo;
 
 //	safe_handlers.c
@@ -120,6 +122,14 @@ void		safe_free(t_table *table);
 void		safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
 void		error_mutex(int status, t_mutex_code mutex_code);
 
+//	get_set.c
+void		set_status(t_mutex *mtx, int *old, int newval);
+int			get_sim_status(t_table *table);
+int			get_phil_status(t_philo *philo);
+int			get_int(t_mutex *mtx, int *val);
+void		set_ts(t_mutex *mtx, t_timestamp *old, t_timestamp new);
+t_timestamp	get_ts(t_mutex *mtx, t_timestamp *val);
+
 //	errors.c
 void		error_exit(int errcode);
 int			check_input(t_table *table);
@@ -127,6 +137,7 @@ void		print_errcode(int errcode, int argc);
 void		print_error(t_table *table, int err);
 
 //	parse_input.c
+void		print_valid_input(t_table *table);
 int			parse_input(t_table *table, char *argv[]);
 
 //	init.c
@@ -145,6 +156,7 @@ int			start_sim(t_table *table);
 void		splash(void);
 
 //	psleep.c
+t_timestamp	ts_since_ts(t_timestamp t_start, t_timestamp t_end);
 t_timestamp	ts_since_tv(struct timeval t_start);
 void		pusleep(unsigned int remaining);
 

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:46:04 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 14:05:49 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 15:48:17 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	safe_free(t_table *table)
 
 	i = 0;
 	printf(KGRN "Freeing allocated memory\n" KDEF);
-	while (i < table->n_philos)
-		free(table->forks[i++]);
 	i = 0;
 	while (i < table->n_philos)
 	{

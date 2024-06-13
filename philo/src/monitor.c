@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 14:44:36 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:53:58 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	check_full(t_table *table)
 			return ;
 	}
 	printf("Setting status to END_FULL\n");
-	table->sim_status = END_FULL;
+	set_status(&table->mutex, &table->sim_status, END_FULL);
 }
 
 
@@ -33,6 +33,7 @@ void	check_full(t_table *table)
 void	*routine_monitor(void *arg)
 {
 	t_table		*table;
+	t_philo		*philo;
 	t_timestamp	curr_time;
 	int			i;
 
@@ -40,36 +41,37 @@ void	*routine_monitor(void *arg)
 	curr_time = ts_since_tv(table->start_time);
 	pusleep(table->starting_line - curr_time);
 	curr_time = ts_since_tv(table->start_time);
-	printf("Starting monitor at %d\n", curr_time);
+	/*printf("Starting monitor at %d\n", curr_time);*/
 	while (table->sim_status == RUNNING)
 	{
 		i = 0;
 		while (RUNNING == table->sim_status && i < table->n_philos)
 		{
+			philo = table->philos[i];
 			curr_time = ts_since_tv(table->start_time);
-			if (table->philos[i]->status == DEAD)
-				table->sim_status = END_DEAD;
-			else if (table->philos[i]->status == HUNGRY && curr_time - table->philos[i]->last_meal_time >= table->time_to_die)
+			if (get_phil_status(philo) == DEAD)
+				set_status(&table->mutex, &table->sim_status, END_DEAD);
+			else if ((philo->status == HUNGRY/* || table->philos[i]->status == SLEEPING*/) && curr_time - philo->last_meal_time >= table->time_to_die)
 			{
+				set_status(&philo->mutex, &philo->status, DEAD);
 				curr_time = ts_since_tv(table->start_time);
-				printf("%-10d Monitor: Philo %d is dead\n", curr_time, table->philos[i]->id + 1);
-				table->philos[i]->status = DEAD;
+				printf("%-10d Monitor: Philo %d is dead\n", curr_time / MSEC, philo->id + 1);
 			}
-			else if (table->n_limit_meals == 0 || table->philos[i]->n_meals < table->n_limit_meals)
+			else if (table->n_limit_meals == 0 || philo->n_meals < table->n_limit_meals)
 				;
-			else if (table->philos[i]->status != FULL)
+			else if (philo->status != FULL)
 			{
+				set_status(&philo->mutex, &philo->status, FULL);
 				curr_time = ts_since_tv(table->start_time);
-				printf("%-10d Monitor: Philo %d is full\n", curr_time, table->philos[i]->id + 1);
-				table->philos[i]->status = FULL;
+				printf("%-10d Monitor: Philo %d is full\n", curr_time / MSEC, philo->id + 1);
 			}
 			i++;
 		}
 		check_full(table);
 	}
-	if (table->sim_status == END_FULL)
+	if (get_sim_status(table) == END_FULL)
 		printf("Simulation ending: all philosophers are full\n");
-	else if (table->sim_status == END_DEAD)
+	else if (get_sim_status(table) == END_DEAD)
 		printf("Simulation ending: a philosopher has died\n");
 	return (NULL);
 }
