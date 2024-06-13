@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 17:53:58 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:58:32 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	check_full(t_table *table)
 	set_status(&table->mutex, &table->sim_status, END_FULL);
 }
 
-
-
 void	*routine_monitor(void *arg)
 {
 	t_table		*table;
@@ -41,7 +39,6 @@ void	*routine_monitor(void *arg)
 	curr_time = ts_since_tv(table->start_time);
 	pusleep(table->starting_line - curr_time);
 	curr_time = ts_since_tv(table->start_time);
-	/*printf("Starting monitor at %d\n", curr_time);*/
 	while (table->sim_status == RUNNING)
 	{
 		i = 0;
@@ -51,11 +48,13 @@ void	*routine_monitor(void *arg)
 			curr_time = ts_since_tv(table->start_time);
 			if (get_phil_status(philo) == DEAD)
 				set_status(&table->mutex, &table->sim_status, END_DEAD);
-			else if ((philo->status == HUNGRY/* || table->philos[i]->status == SLEEPING*/) && curr_time - philo->last_meal_time >= table->time_to_die)
+			else if ((philo->status == HUNGRY) && curr_time - philo->last_meal_time >= table->time_to_die)
 			{
 				set_status(&philo->mutex, &philo->status, DEAD);
 				curr_time = ts_since_tv(table->start_time);
-				printf("%-10d Monitor: Philo %d is dead\n", curr_time / MSEC, philo->id + 1);
+				/*printf("%-10d Monitor: Philo %d is dead\n", curr_time / MSEC, philo->id + 1);*/
+				printf("%d %d died\n", curr_time / MSEC, philo->id + 1);
+				fflush(stdout);
 			}
 			else if (table->n_limit_meals == 0 || philo->n_meals < table->n_limit_meals)
 				;
@@ -63,7 +62,9 @@ void	*routine_monitor(void *arg)
 			{
 				set_status(&philo->mutex, &philo->status, FULL);
 				curr_time = ts_since_tv(table->start_time);
-				printf("%-10d Monitor: Philo %d is full\n", curr_time / MSEC, philo->id + 1);
+				/*printf("%-10d Monitor: Philo %d is full\n", curr_time / MSEC, philo->id + 1);*/
+				printf("%d %d is full\n", curr_time / MSEC, philo->id + 1);
+				fflush(stdout);
 			}
 			i++;
 		}

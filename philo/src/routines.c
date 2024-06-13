@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 18:13:16 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:01:52 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@ void	*take_left_fork(t_table *table, t_philo *philo)
 	t_timestamp	lfork_start;
 
 	lfork_start = ts_since_tv(table->start_time);
-	printf("%-10d %-4d taking left fork\n", lfork_start / MSEC, philo->id + 1);
-	fflush(stdout);
+	/*printf("%-10d %-4d taking left fork\n", lfork_start / MSEC, philo->id + 1);*/
+	/*fflush(stdout);*/
 	target = philo->id;
 	out = take_fork(table, table->forks[target], philo);
 	lfork_start = ts_since_tv(table->start_time);
-	printf("%-10d %-4d taken left fork (%d)\n", lfork_start / MSEC, philo->id + 1, philo->l_fork->id);
+	/*printf("%-10d %-4d taken left fork (%d)\n", lfork_start / MSEC, philo->id + 1, philo->l_fork->id);*/
+	printf("%d %d has taken a fork\n", lfork_start / MSEC, philo->id + 1);
 	fflush(stdout);
 	return (out);
 }
@@ -36,12 +37,13 @@ void	*take_right_fork(t_table *table, t_philo *philo)
 	t_timestamp	rfork_start;
 
 	rfork_start = ts_since_tv(table->start_time);
-	printf("%-10d %-4d taking right fork\n", rfork_start / MSEC, philo->id + 1);
-	fflush(stdout);
+	/*printf("%-10d %-4d taking right fork\n", rfork_start / MSEC, philo->id + 1);*/
+	/*fflush(stdout);*/
 	target = (philo->id + 1) % table->n_philos;
 	out = take_fork(table, table->forks[target], philo);
 	rfork_start = ts_since_tv(table->start_time);
-	printf("%-10d %-4d taken right fork (%d)\n", rfork_start / MSEC, philo->id + 1, philo->r_fork->id);
+	/*printf("%-10d %-4d taken right fork (%d)\n", rfork_start / MSEC, philo->id + 1, philo->r_fork->id);*/
+	printf("%d %d has taken a fork\n", rfork_start / MSEC, philo->id + 1);
 	fflush(stdout);
 	return (out);
 }
@@ -71,7 +73,8 @@ void	*routine_sleep(t_table *table, t_philo *philo)
 	if (get_int(&philo->mutex, &philo->status) != DEAD)
 	{
 		set_status(&philo->mutex, &philo->status, SLEEPING);
-		printf("%-10d %-4d SLEEPING\n", sleep_start / MSEC, philo->id + 1);
+		/*printf("%-10d %-4d SLEEPING\n", sleep_start / MSEC, philo->id + 1);*/
+		printf("%d %d is sleeping\n", sleep_start / MSEC, philo->id + 1);
 		fflush(stdout);
 		pusleep(table->time_to_sleep);
 		if (get_int(&philo->mutex, &philo->status) != DEAD)
@@ -90,9 +93,10 @@ void	*routine_eat(t_table *table, t_philo *philo)
 		eat_start = ts_since_tv(table->start_time);
 		philo->last_meal_time = eat_start + table->time_to_eat;
 		/*printf("%-10d %-4d EATING meal %d of %d\n", eat_start, philo->id + 1, philo->n_meals + 1, table->n_limit_meals);*/
-		printf("%-10d %-4d EATING\n", eat_start / MSEC, philo->id + 1);
+		/*printf("%-10d %-4d EATING\n", eat_start / MSEC, philo->id + 1);*/
+		printf("%d %d is eating\n", eat_start / MSEC, philo->id + 1);
 		fflush(stdout);
-		pusleep(table->time_to_eat - 4);
+		pusleep(table->time_to_eat);
 		philo->n_meals += 1;
 		pthread_mutex_unlock(&philo->l_fork->mutex);
 		philo->l_fork = NULL;
@@ -127,9 +131,9 @@ void	*routine_run(void *arg)
 			take_left_fork(table, philo);
 		if (philo->status == HUNGRY && table->sim_status == RUNNING)
 			take_right_fork(table, philo);
-		if (philo->l_fork && philo->r_fork && philo->status == HUNGRY)
+		if (philo->l_fork && philo->r_fork && table->sim_status == RUNNING)
 			routine_eat(table, philo);
-		if (philo->status != FULL)
+		if (philo->status != FULL && philo->status != DEAD)
 			routine_sleep(table, philo);
 	}
 	return (NULL);
