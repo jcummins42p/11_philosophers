@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 14:42:51 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:58:01 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ void	*routine_sleep(t_table *table, t_philo *philo)
 {
 	t_timestamp	sleep_start;
 
-	sleep_start = ts_since_tv(table->start_time);
 	if (get_int(&philo->mutex, &philo->status) != DEAD)
 	{
+		sleep_start = ts_since_tv(table->start_time);
 		set_status(&philo->mutex, &philo->status, SLEEPING);
 		/*printf("%-10d %-4d SLEEPING\n", sleep_start / MSEC, philo->id + 1);*/
 		printf("%d %d is sleeping\n", sleep_start / MSEC, philo->id + 1);
@@ -128,6 +128,9 @@ void	*routine_run(void *arg)
 		routine_sleep(table, philo);
 	while (philo->status == HUNGRY && philo->table->sim_status == RUNNING)
 	{
+		curr_time = ts_since_tv(table->start_time);
+		printf("%d %d is thinking\n", curr_time / MSEC, philo->id + 1);
+		fflush(stdout);
 		if (philo->status == HUNGRY && table->sim_status == RUNNING)
 			take_left_fork(table, philo);
 		if (philo->status == HUNGRY && table->sim_status == RUNNING)

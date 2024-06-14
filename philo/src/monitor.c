@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 14:28:20 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:45:30 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	*routine_monitor(void *arg)
 				set_status(&philo->mutex, &philo->status, FULL);
 				curr_time = ts_since_tv(table->start_time);
 				/*printf("%-10d Monitor: Philo %d is full\n", curr_time / MSEC, philo->id + 1);*/
-				printf("%d %d is full\n", curr_time / MSEC, philo->id + 1);
+				printf("%d %d is thinking\n", curr_time / MSEC, philo->id + 1);
 				fflush(stdout);
 			}
 			i++;
