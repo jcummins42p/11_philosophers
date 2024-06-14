@@ -6,7 +6,7 @@
 #    By: jcummins <jcummins@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/26 18:08:59 by jcummins          #+#    #+#              #
-#    Updated: 2024/06/14 15:07:45 by jcummins         ###   ########.fr        #
+#    Updated: 2024/06/14 15:17:36 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,24 +26,25 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIB_PATH) $(MLX_PATH) $(HEADERS)
 	@$(CC) $(CFLAGS) $^ -o $@
-	@echo "Linking object files into executable $@ ✅"
+	@echo "✅ Linking object files into executable $@"
 
 sanitize: $(OBJS) $(LIB_PATH) $(MLX_PATH) $(HEADERS)
 	@$(CC) $(CFLAGS) -fsanitize=thread -g -O1 $^ -o $@
-	@echo "Linking object files into executable $@ with -fsanitize=thread option ✅"
+	@echo "✅ Linking object files into executable $@ with -fsanitize=thread option"
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I/usr/include -I$(HEADER_DIR) -O3 -c $< -o $@
-	@echo "Complied object file $@ from source file $< ✅"
+	@echo "✅ Complied object file $@ from source file $<"
 
 clean:
-	@echo "Removing all object files 💥"
+	@echo "💥 Removing all object files"
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@echo "Removing all object files and executable 💥💥"
+	@echo "💥 Removing all object files and executable"
 	@rm -rf $(NAME)
+	@rm -rf sanitize
 
 re:	fclean all
 
