@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 18:09:51 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:35:19 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef enum e_errcode
 	N_ARGS,
 	BAD_ARGS,
 	MALLOC_FAIL,
+	MUTEX_FAIL,
 	TIME_FAIL
 }	t_errcode;
 

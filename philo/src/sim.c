@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 08:14:17 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 13:58:57 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ int	start_sim(t_table *table)
 		{
 			if (pthread_create(&table->philos[i]->thread_id, NULL, &routine_run, table->philos[i]))
 				printf("Error creating thread %d\n", table->philos[i]->id);
-			usleep(1000);
+			else
+				printf("Successfully created philo thread %d\n", table->philos[i]->id);
 		}
+		printf("Creating monitor thread\n");
 		pthread_create(&table->monitor_id, NULL, &routine_monitor, table);
 		while (table->sim_status == RUNNING)
 			usleep(1000);

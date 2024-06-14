@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 19:01:52 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:42:51 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void	*take_right_fork(t_table *table, t_philo *philo)
 
 void	*take_fork(t_table *table, t_fork *fork, t_philo *philo)
 {
-	pthread_mutex_lock(&fork->mutex);
+	safe_mutex(&fork->mutex, LOCK);
+	/*pthread_mutex_lock(&fork->mutex);*/
 	if (philo->status == DEAD)
 		printf("Philo %d died while waiting for FORK (%d)\n", philo->id + 1, fork->id);
 	else
@@ -98,9 +99,9 @@ void	*routine_eat(t_table *table, t_philo *philo)
 		fflush(stdout);
 		pusleep(table->time_to_eat);
 		philo->n_meals += 1;
-		pthread_mutex_unlock(&philo->l_fork->mutex);
+		safe_mutex(&philo->l_fork->mutex, UNLOCK);
 		philo->l_fork = NULL;
-		pthread_mutex_unlock(&philo->r_fork->mutex);
+		safe_mutex(&philo->r_fork->mutex, UNLOCK);
 		philo->r_fork = NULL;
 		if (philo->n_meals == table->n_limit_meals)
 			set_status(&philo->mutex, &philo->status, FULL);

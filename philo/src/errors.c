@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:08:57 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 19:06:48 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:35:28 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	error_exit(int errcode)
 {
 	if (errcode == TIME_FAIL)
 		printf("Gettimeofday failed\n");
+	else if (errcode == MUTEX_FAIL)
+		printf("Mutex failed\n");
 	exit (errcode);
 }
 

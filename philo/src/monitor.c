@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 18:58:32 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:28:20 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	*routine_monitor(void *arg)
 	t_philo		*philo;
 	t_timestamp	curr_time;
 	int			i;
+	int			status;
 
 	table = (t_table *)arg;
 	curr_time = ts_since_tv(table->start_time);
@@ -45,10 +46,11 @@ void	*routine_monitor(void *arg)
 		while (RUNNING == table->sim_status && i < table->n_philos)
 		{
 			philo = table->philos[i];
+			status = get_phil_status(philo);
 			curr_time = ts_since_tv(table->start_time);
-			if (get_phil_status(philo) == DEAD)
+			if (status == DEAD)
 				set_status(&table->mutex, &table->sim_status, END_DEAD);
-			else if ((philo->status == HUNGRY) && curr_time - philo->last_meal_time >= table->time_to_die)
+			else if ((status == HUNGRY) && curr_time - philo->last_meal_time >= table->time_to_die)
 			{
 				set_status(&philo->mutex, &philo->status, DEAD);
 				curr_time = ts_since_tv(table->start_time);
@@ -58,7 +60,7 @@ void	*routine_monitor(void *arg)
 			}
 			else if (table->n_limit_meals == 0 || philo->n_meals < table->n_limit_meals)
 				;
-			else if (philo->status != FULL)
+			else if (status != FULL)
 			{
 				set_status(&philo->mutex, &philo->status, FULL);
 				curr_time = ts_since_tv(table->start_time);
