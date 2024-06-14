@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:46:04 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 14:35:47 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:01:18 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	safe_free(t_table *table)
 
 void	safe_mutex(t_mutex *mtx, t_mutex_code mutex_code)
 {
-	int errcode;
+	int	errcode;
 
 	errcode = 0;
 	if (mutex_code == LOCK)
