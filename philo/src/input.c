@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/13 15:56:47 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/14 08:23:43 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ int	check_input(t_table *table)
 int	parse_input(t_table *table, char *argv[])
 {
 	table->n_philos = ft_atol(argv[1]);
-	table->time_to_die = ft_atol(argv[2]) * 1e3;
-	table->time_to_eat = ft_atol(argv[3]) * 1e3;
-	table->time_to_sleep = ft_atol(argv[4]) * 1e3;
+	table->time_to_die = ft_atol(argv[2]) * MSEC;
+	table->time_to_eat = ft_atol(argv[3]) * MSEC;
+	table->time_to_sleep = ft_atol(argv[4]) * MSEC;
 	if (argv[5])
 		table->n_limit_meals = ft_atol(argv[5]);
 	else
