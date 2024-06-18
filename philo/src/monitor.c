@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 17:52:39 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:54:05 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ void	check_full(t_table *table)
 void	monitor_cycle(t_table *table, t_philo *philo, t_timestamp curr_time)
 {
 	int			status;
-	/*t_timestamp last_meal;*/
+	t_timestamp	lmt;
 
 	status = get_phil_status(philo);
-	/*last_meal = get_ts(&philo->mutex, &philo->last_meal_time);*/
+	lmt = get_ts(&philo->mutex, &philo->last_meal_time);
 	if (status == DEAD)
 		set_status(&table->mutex, &table->sim_status, END_DEAD);
-	else if ((status == HUNGRY) && curr_time - philo->last_meal_time >= table->time_to_die)
+	else if ((status == HUNGRY) && curr_time - lmt > table->time_to_die + 500)
 	{
 		set_status(&philo->mutex, &philo->status, DEAD);
 		curr_time = ts_since_tv(table->start_time);

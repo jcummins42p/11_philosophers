@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:53:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 13:54:34 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:13:16 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ int	main(int argc, char *argv[])
 	if (!errcode)
 	{
 		splash();
+		print_valid_input(&table);
 		start_sim(&table);
+		end_sim(&table);
 		safe_free(&table);
 	}
 	if (errcode)

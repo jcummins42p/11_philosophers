@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 17:11:12 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:02:16 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ typedef enum e_errcode
 	BAD_ARGS,
 	MALLOC_FAIL,
 	MUTEX_FAIL,
-	TIME_FAIL
+	TIME_FAIL,
+	THREAD_FAIL
 }	t_errcode;
 
 typedef enum e_endcode
@@ -150,7 +151,8 @@ int			ft_strlen(const char *str);
 long		ft_atol(const char *str);
 
 //	sim.c
-void		run_sim(t_table *table);
+int			spawn_philos(pthread_t *thread_id, t_philo *philo);
+int			end_sim(t_table *table);
 int			start_sim(t_table *table);
 
 //	splash.c

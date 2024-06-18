@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 17:11:32 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/18 18:14:59 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void	routine_sleep(t_table *table, t_philo *philo)
 		fflush(stdout);
 		pusleep(table->time_to_sleep);
 		if (get_int(&philo->mutex, &philo->status) != DEAD)
-			set_status(&philo->mutex, &philo->status, HUNGRY);
+		{
+			if (get_int(&philo->mutex, &philo->n_meals) < table->n_limit_meals)
+				set_status(&philo->mutex, &philo->status, HUNGRY);
+		}
 	}
 }
 
@@ -36,7 +39,7 @@ void	routine_eat(t_table *table, t_philo *philo)
 	{
 		set_status(&philo->mutex, &philo->status, EATING);
 		eat_start = ts_since_tv(table->start_time);
-		philo->last_meal_time = eat_start + table->time_to_eat;
+		set_ts(&philo->mutex, &philo->last_meal_time, eat_start + table->time_to_eat);
 		printf("%d %d is eating\n", eat_start / MSEC, philo->id + 1);
 		fflush(stdout);
 		pusleep(table->time_to_eat);
@@ -58,7 +61,10 @@ void	routine_cycle(t_table *table, t_philo *philo)
 	printf("%d %d is thinking\n", curr_time / MSEC, philo->id + 1);
 	fflush(stdout);
 	if (philo->status == HUNGRY && table->sim_status == RUNNING)
+	{
+		pusleep(200);
 		take_left_fork(table, philo);
+	}
 	if (philo->status == HUNGRY && table->sim_status == RUNNING)
 		take_right_fork(table, philo);
 	if (philo->l_fork && philo->r_fork && table->sim_status == RUNNING)
@@ -78,15 +84,22 @@ void	*start_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	philo->last_meal_time = table->starting_line;
+	set_ts(&philo->mutex, &philo->last_meal_time, table->starting_line);
 	curr_time = ts_since_tv(table->start_time);
 	pusleep(table->starting_line - curr_time);
 	curr_time = ts_since_tv(table->start_time);
 	if (philo->id % 2)
 		routine_sleep(table, philo);
-	while (philo->status == HUNGRY && philo->table->sim_status == RUNNING)
+	while (philo->status == HUNGRY)
 	{
 		routine_cycle(table, philo);
+	}
+	if (table->sim_status == RUNNING)
+	{
+		curr_time = ts_since_tv(table->start_time);
+		printf("%d %d is thinking at the end\n", curr_time / MSEC, philo->id + 1);
+		fflush(stdout);
+		return (NULL);
 	}
 	return (NULL);
 }
