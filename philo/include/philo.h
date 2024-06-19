@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/18 15:02:16 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 11:15:52 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ void		set_status(t_mutex *mtx, int *old, int newval);
 int			get_sim_status(t_table *table);
 int			get_phil_status(t_philo *philo);
 int			get_int(t_mutex *mtx, int *val);
+void		set_increment(t_mutex *mtx, int *old);
 void		set_ts(t_mutex *mtx, t_timestamp *old, t_timestamp new);
 t_timestamp	get_ts(t_mutex *mtx, t_timestamp *val);
 

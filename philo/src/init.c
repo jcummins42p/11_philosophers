@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/12 18:25:11 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 10:59:50 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	init_philos(t_table *table)
 	while (i < table->n_philos)
 	{
 		philo = malloc(sizeof(t_philo));
+		pthread_mutex_init(&philo->mutex, NULL);
 		philo->id = i;
 		philo->l_fork = NULL;
 		philo->r_fork = NULL;

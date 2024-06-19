@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:58:35 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/18 15:42:50 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 11:14:22 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ void	set_status(t_mutex *mtx, int *old, int newval)
 {
 	safe_mutex(mtx, LOCK);
 	*old = newval;
+	safe_mutex(mtx, UNLOCK);
+}
+
+void	set_increment(t_mutex *mtx, int *old)
+{
+	safe_mutex(mtx, LOCK);
+	*old = *old + 1;
 	safe_mutex(mtx, UNLOCK);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/18 17:54:05 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 11:38:18 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,26 @@ void	monitor_cycle(t_table *table, t_philo *philo, t_timestamp curr_time)
 	int			status;
 	t_timestamp	lmt;
 
-	status = get_phil_status(philo);
 	lmt = get_ts(&philo->mutex, &philo->last_meal_time);
-	if (status == DEAD)
-		set_status(&table->mutex, &table->sim_status, END_DEAD);
-	else if ((status == HUNGRY) && curr_time - lmt > table->time_to_die + 500)
+	/*if (status == DEAD)*/
+		/*set_status(&table->mutex, &table->sim_status, END_DEAD);*/
+	if (curr_time - lmt > table->time_to_die + MSEC)
 	{
-		set_status(&philo->mutex, &philo->status, DEAD);
-		curr_time = ts_since_tv(table->start_time);
-		printf("%d %d died\n", curr_time / MSEC, philo->id + 1);
-		fflush(stdout);
+		status = get_phil_status(philo);
+		if (status == EATING || status == FULL)
+			return ;
+		else
+		{
+			set_status(&philo->mutex, &philo->status, DEAD);
+			set_status(&table->mutex, &table->sim_status, END_DEAD);
+			curr_time = ts_since_tv(table->start_time);
+			printf("%d %d died\n", curr_time / MSEC, philo->id + 1);
+			fflush(stdout);
+		}
 	}
 	else if (table->n_limit_meals == 0 || philo->n_meals < table->n_limit_meals)
 		return ;
-	else if (status != FULL)
+	else
 		set_status(&philo->mutex, &philo->status, FULL);
 }
 
@@ -57,20 +63,23 @@ void	*start_monitor(void *arg)
 	t_table		*table;
 	t_timestamp	curr_time;
 	int			i;
+	int 		status;
 
 	table = (t_table *)arg;
 	curr_time = ts_since_tv(table->start_time);
 	pusleep(table->starting_line - curr_time);
 	curr_time = ts_since_tv(table->start_time);
-	while (table->sim_status == RUNNING)
+	status = get_int(&table->mutex, &table->sim_status);
+	while (status == RUNNING)
 	{
 		i = 0;
-		while (RUNNING == table->sim_status && i < table->n_philos)
+		while (i < table->n_philos)
 		{
 			curr_time = ts_since_tv(table->start_time);
 			monitor_cycle(table, table->philos[i], curr_time);
 			i++;
 		}
+		status = get_int(&table->mutex, &table->sim_status);
 		check_full(table);
 	}
 	if (get_sim_status(table) == END_FULL)
