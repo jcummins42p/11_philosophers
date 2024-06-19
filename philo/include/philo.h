@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 11:15:52 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 17:13:29 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ void		*safe_malloc(size_t bytes, t_table *table);
 void		safe_free(t_table *table);
 void		safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
 void		error_mutex(int status, t_mutex_code mutex_code);
+void		print_ts(t_table *table, t_philo *philo, int state);
 
 //	get_set.c
 void		set_status(t_mutex *mtx, int *old, int newval);
@@ -165,9 +166,9 @@ t_timestamp	ts_since_tv(struct timeval t_start);
 void		pusleep(unsigned int remaining);
 
 //	fork_funcs.c
-void		*take_left_fork(t_table *table, t_philo *philo);
-void		*take_right_fork(t_table *table, t_philo *philo);
-void		*take_fork(t_table *table, t_fork *fork, t_philo *philo);
+void		take_left_fork(t_table *table, t_philo *philo);
+void		take_right_fork(t_table *table, t_philo *philo);
+void		take_fork(t_table *table, t_fork *fork, t_philo *philo);
 
 //	routines.c
 void		routine_sleep(t_table *table, t_philo *philo);

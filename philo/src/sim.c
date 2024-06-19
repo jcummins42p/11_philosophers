@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/18 17:27:32 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 17:52:44 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@ int	end_sim(t_table *table)
 {
 	int	i;
 
-	if (table->sim_status != RUNNING)
-	{
-		printf("Simulation registers end of simulation\n");
-		fflush(stdout);
-		i = 0;
-		while (i < table->n_philos)
-			pthread_join(table->philos[i++]->thread_id, NULL);
-	}
+	i = 0;
+	while (i < table->n_philos)
+		pthread_join(table->philos[i++]->thread_id, NULL);
 	pthread_join(table->monitor_id, NULL);
+	if (table->sim_status == END_DEAD)
+		printf("Simulation ends: a philosopher has died\n");
+	else if (table->sim_status == END_FULL)
+		printf("Simulation ends: all philosophers are full\n");
+	fflush(stdout);
 	return (0);
 }
 
