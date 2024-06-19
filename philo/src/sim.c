@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 21:41:06 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 23:30:28 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	spawn_philos(pthread_t *thread_id, t_philo *philo)
 {
 	if (pthread_create(thread_id, NULL, &start_routine, philo))
 		{
-			printf("Error creating philosopher thread %d\n", philo->id);
+			/*printf("Error creating philosopher thread %d\n", philo->id);*/
 			return (1);
 		}
 	else
 		{
-			printf("Success creating philosopher thread %d\n", philo->id);
+			/*printf("Success creating philosopher thread %d\n", philo->id);*/
 			return (0);
 		}
 }
@@ -55,9 +55,6 @@ void	set_starting_line(t_table *table)
 int	start_sim(t_table *table)
 {
 	int			i;
-	pthread_barrier_t	start_barrier;
-
-	pthread_barrier_init(&start_barrier, NULL, table->n_philos + 1);
 
 	if (table->n_philos > 0)
 	{

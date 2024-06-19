@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 21:46:33 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 23:26:17 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	monitor_cycle(t_table *table, t_philo *philo, t_timestamp curr_time)
 	t_timestamp	lmt;
 
 	lmt = get_ts(&philo->mutex, &philo->last_meal_time);
-	if (curr_time - lmt > table->time_to_die + 500)
+	if (curr_time - lmt > table->time_to_die + DEATH_MOD)
 	{
 		status = get_phil_status(philo);
 		if (status == EATING || status == FULL)

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 16:57:00 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/20 00:50:49 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	pusleep(unsigned int total)
 	while (elapsed < total)
 	{
 		elapsed = ts_since_tv(t_start);
-		if ((int)(total - elapsed) < 500)
+		if ((int)(total - elapsed) < MSEC)
 		{
 			while (elapsed <= total)
 			{
