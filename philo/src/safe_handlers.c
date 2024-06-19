@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:46:04 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 17:58:08 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:46:17 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	error_mutex(int status, t_mutex_code mutex_code)
 
 void	print_ts(t_table *table, t_philo *philo, int state)
 {
-	t_timestamp ts;
+	t_timestamp	ts;
 	t_timestamp	sl;
 
 	ts = ts_since_tv(table->start_time);
@@ -76,7 +76,10 @@ void	print_ts(t_table *table, t_philo *philo, int state)
 	else if (state == SLEEPING)
 		printf("%d %d is sleeping\n", (ts - sl) / MSEC, philo->id + 1);
 	else if (state == TAKING_L_FORK || state == TAKING_R_FORK)
-		printf("%d %d is taking a fork\n", (ts - sl) / MSEC, philo->id + 1);
+	{
+		if (get_int(&philo->mutex, &philo->status) != DEAD)
+			printf("%d %d is taking a fork\n", (ts - sl) / MSEC, philo->id + 1);
+	}
 	else if (state == DEAD)
 		printf("%d %d is dead\n", (ts - sl) / MSEC, philo->id + 1);
 	fflush(stdout);

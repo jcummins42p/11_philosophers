@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 17:13:29 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:42:58 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_table
 	t_philo			**philos;
 	int				validity;
 	pthread_t		monitor_id;
+	pthread_barrier_t	start_barrier;
 	t_mutex			mutex;
 }	t_table;
 
@@ -149,6 +150,7 @@ int			init_philos(t_table *table);
 int			init_forks(t_table *table);
 
 //	utils.c
+void		update_status(t_table *table, t_philo *philo, int *t, int *p);
 int			ft_strlen(const char *str);
 long		ft_atol(const char *str);
 

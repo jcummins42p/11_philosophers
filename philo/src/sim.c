@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 17:52:44 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:41:06 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,15 @@ int	end_sim(t_table *table)
 int	spawn_philos(pthread_t *thread_id, t_philo *philo)
 {
 	if (pthread_create(thread_id, NULL, &start_routine, philo))
-		return (1);
+		{
+			printf("Error creating philosopher thread %d\n", philo->id);
+			return (1);
+		}
 	else
-		return (0);
+		{
+			printf("Success creating philosopher thread %d\n", philo->id);
+			return (0);
+		}
 }
 
 void	set_starting_line(t_table *table)
@@ -41,7 +47,7 @@ void	set_starting_line(t_table *table)
 	t_timestamp	output;
 	int			mp;
 
-	mp = 100;
+	mp = 10;
 	output = ts_since_tv(table->start_time) + (MSEC * mp * table->n_philos);
 	table->starting_line = output;
 }
@@ -49,6 +55,9 @@ void	set_starting_line(t_table *table)
 int	start_sim(t_table *table)
 {
 	int			i;
+	pthread_barrier_t	start_barrier;
+
+	pthread_barrier_init(&start_barrier, NULL, table->n_philos + 1);
 
 	if (table->n_philos > 0)
 	{
@@ -58,10 +67,13 @@ int	start_sim(t_table *table)
 		i = -1;
 		while (++i < table->n_philos)
 			if (spawn_philos(&table->philos[i]->thread_id, table->philos[i]))
+			{
+				printf("Thread not made\n");
 				error_exit(THREAD_FAIL);
+			}
 		pthread_create(&table->monitor_id, NULL, &start_monitor, table);
-		while (table->sim_status == RUNNING)
-			usleep(10000);
+		while (get_int(&table->mutex, &table->sim_status) == RUNNING)
+			usleep(1000000);
 	}
 	return (0);
 }

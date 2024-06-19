@@ -6,7 +6,7 @@
 #    By: jcummins <jcummins@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/26 18:08:59 by jcummins          #+#    #+#              #
-#    Updated: 2024/06/19 15:57:22 by jcummins         ###   ########.fr        #
+#    Updated: 2024/06/19 21:13:32 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ HEADER_DIR = include
 SRC_DIR = src
 OBJ_DIR = obj
 CC = cc
-CFLAGS =  -g -O1 -pthread -Werror -Wextra -Wall -pedantic -I$(HEADER_DIR)
+CFLAGS =  -g -Ipthread -Werror -Wextra -Wall -pedantic -I$(HEADER_DIR)
 
 SRCS = $(shell find $(SRC_DIR) -name '*.c')
 

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 18:02:13 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:46:33 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	monitor_cycle(t_table *table, t_philo *philo, t_timestamp curr_time)
 		{
 			set_status(&philo->mutex, &philo->status, DEAD);
 			set_status(&table->mutex, &table->sim_status, END_DEAD);
-			usleep(500);
+			usleep(MSEC);
 			print_ts(table, philo, DEAD);
 		}
 	}
@@ -64,6 +64,7 @@ void	*start_monitor(void *arg)
 	table = (t_table *)arg;
 	curr_time = ts_since_tv(table->start_time);
 	pusleep(table->starting_line - curr_time);
+	/*pthread_barrier_wait(&table->start_barrier);*/
 	curr_time = ts_since_tv(table->start_time);
 	status = get_int(&table->mutex, &table->sim_status);
 	while (status == RUNNING)
