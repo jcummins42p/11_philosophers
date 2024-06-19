@@ -6,7 +6,7 @@
 #    By: jcummins <jcummins@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/26 18:08:59 by jcummins          #+#    #+#              #
-#    Updated: 2024/06/14 17:58:48 by jcummins         ###   ########.fr        #
+#    Updated: 2024/06/19 15:57:22 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,13 @@ $(NAME): $(OBJS) $(LIB_PATH) $(MLX_PATH) $(HEADERS)
 	@$(CC) $(CFLAGS) $^ -o $@
 	@echo "✅ Linking object files into executable $@"
 
-sanitize: $(OBJS) $(LIB_PATH) $(MLX_PATH) $(HEADERS)
+sanitize-thread: $(OBJS) $(LIB_PATH) $(MLX_PATH) $(HEADERS)
 	@$(CC) $(CFLAGS) -fsanitize=thread -g -O1 $^ -o $@
 	@echo "✅ Linking object files into executable $@ with -fsanitize=thread option"
+
+sanitize-address: $(OBJS) $(LIB_PATH) $(MLX_PATH) $(HEADERS)
+	@$(CC) $(CFLAGS) -fsanitize=address -g -O1 $^ -o $@
+	@echo "✅ Linking object files into executable $@ with -fsanitize=address option"
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
 	@mkdir -p $(@D)
