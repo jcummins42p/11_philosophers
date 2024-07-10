@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/14 16:17:49 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 17:35:39 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_valid_input(t_table *table)
 {
-	usleep(1000000);
+	usleep(100000);
 	printf(KGRN "Input valid:\n");
 	printf("\t✅ Number of philosophers is %ld\n", table->n_philos);
 	printf("\t✅ Time to die is %ld ms\n", table->time_to_die / MSEC);

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:54:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 21:50:42 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 17:48:34 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	take_left_fork(t_table *table, t_philo *philo)
 	target = philo->id;
 	take_fork(table, table->forks[target], philo);
 	print_ts(table, philo, TAKING_L_FORK);
-	printf("(fork %d)\n", target + 1);
-	fflush(stdout);
+	/*printf("(fork %d)\n", target + 1);*/
+	/*fflush(stdout);*/
 }
 
 void	take_right_fork(t_table *table, t_philo *philo)
@@ -32,8 +32,8 @@ void	take_right_fork(t_table *table, t_philo *philo)
 	target = (philo->id + 1) % table->n_philos;
 	take_fork(table, table->forks[target], philo);
 	print_ts(table, philo, TAKING_R_FORK);
-	printf("(fork %d)\n", target + 1);
-	fflush(stdout);
+	/*printf("(fork %d)\n", target + 1);*/
+	/*fflush(stdout);*/
 }
 
 //	debug code for 'if (philo->status == DEAD)' to check deadlock conditions
