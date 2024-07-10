@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/20 00:08:18 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:32:51 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,8 @@ t_timestamp	ts_since_tv(struct timeval t_start);
 void		pusleep(unsigned int remaining);
 
 //	fork_funcs.c
-void		take_left_fork(t_table *table, t_philo *philo);
-void		take_right_fork(t_table *table, t_philo *philo);
+void		take_fork_one(t_table *table, t_philo *philo);
+void		take_fork_two(t_table *table, t_philo *philo);
 void		take_fork(t_table *table, t_fork *fork, t_philo *philo);
 
 //	routines.c

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/20 00:56:52 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:12:38 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,18 @@ void	routine_cycle(t_table *table, t_philo *philo)
 	int			t_status;
 	int			p_status;
 
-	t_status = get_int(&table->mutex, &table->sim_status);
-	p_status = get_int(&philo->mutex, &philo->status);
-	print_ts(table, philo, THINKING);
+	/*t_status = get_int(&table->mutex, &table->sim_status);*/
+	/*p_status = get_int(&philo->mutex, &philo->status);*/
+	update_status(table, philo, &t_status, &p_status);
+	/*if (p_status == THINKING)*/
+		/*set_status(&philo->mutex, &philo->status, HUNGRY);*/
+	/*else*/
+		print_ts(table, philo, THINKING);
 	if (p_status == HUNGRY && t_status == RUNNING)
-		take_left_fork(table, philo);
+		take_fork_one(table, philo);
 	update_status(table, philo, &t_status, &p_status);
 	if (p_status == HUNGRY && t_status == RUNNING)
-		take_right_fork(table, philo);
+		take_fork_two(table, philo);
 	update_status(table, philo, &t_status, &p_status);
 	if (philo->l_fork && philo->r_fork && t_status == RUNNING)
 		routine_eat(table, philo);
@@ -96,10 +100,17 @@ void	*start_routine(void *arg)
 	philo = (t_philo *)arg;
 	table = philo->table;
 	/*printf("Commencing philosopher thread %d\n", philo->id);*/
-	synchronise_threads(table, philo);
+	/*synchronise_threads(table, philo);*/
 	/*pthread_barrier_wait(&table->start_barrier);*/
+	safe_mutex(&table->mutex, LOCK);
+	safe_mutex(&table->mutex, UNLOCK);
 	if (philo->id % 2)
+	{
+		/*set_status(&philo->mutex, &philo->status, THINKING);*/
+		/*print_ts(table, philo, THINKING);*/
+		/*pusleep(table->time_to_sleep);*/
 		routine_sleep(table, philo);
+	}
 	while (get_int(&philo->mutex, &philo->status) == HUNGRY && \
 			get_int(&table->mutex, &table->sim_status) == RUNNING)
 		routine_cycle(table, philo);

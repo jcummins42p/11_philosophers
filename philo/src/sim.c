@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 23:30:28 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:23:44 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	set_starting_line(t_table *table)
 	t_timestamp	output;
 	int			mp;
 
-	mp = 10;
+	mp = 10000;
 	output = ts_since_tv(table->start_time) + (MSEC * mp * table->n_philos);
 	table->starting_line = output;
 }
@@ -61,6 +61,7 @@ int	start_sim(t_table *table)
 		if (gettimeofday(&table->start_time, NULL))
 			error_exit(TIME_FAIL);
 		set_starting_line(table);
+		safe_mutex(&table->mutex, LOCK);
 		i = -1;
 		while (++i < table->n_philos)
 			if (spawn_philos(&table->philos[i]->thread_id, table->philos[i]))
@@ -69,8 +70,9 @@ int	start_sim(t_table *table)
 				error_exit(THREAD_FAIL);
 			}
 		pthread_create(&table->monitor_id, NULL, &start_monitor, table);
-		while (get_int(&table->mutex, &table->sim_status) == RUNNING)
-			usleep(1000000);
+		safe_mutex(&table->mutex, UNLOCK);
+		/*while (get_int(&table->mutex, &table->sim_status) == RUNNING)*/
+			/*usleep(1000000);*/
 	}
 	return (0);
 }

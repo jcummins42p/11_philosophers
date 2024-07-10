@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 23:26:17 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:21:36 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	*start_monitor(void *arg)
 	/*pthread_barrier_wait(&table->start_barrier);*/
 	curr_time = ts_since_tv(table->start_time);
 	status = get_int(&table->mutex, &table->sim_status);
+	safe_mutex(&table->mutex, LOCK);
+	safe_mutex(&table->mutex, LOCK);
 	while (status == RUNNING)
 	{
 		i = 0;
