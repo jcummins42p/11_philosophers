@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 21:46:45 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/20 00:56:52 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	*start_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	printf("Commencing philosopher thread %d\n", philo->id);
+	/*printf("Commencing philosopher thread %d\n", philo->id);*/
 	synchronise_threads(table, philo);
 	/*pthread_barrier_wait(&table->start_barrier);*/
 	if (philo->id % 2)

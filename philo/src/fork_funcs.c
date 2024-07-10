@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:54:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/10 17:48:34 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:19:58 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,27 @@ void	take_right_fork(t_table *table, t_philo *philo)
 	//}
 void	take_fork(t_table *table, t_fork *fork, t_philo *philo)
 {
-	/*pthread_mutex_lock(&fork->mutex);*/
-	safe_mutex(&fork->mutex, LOCK);
+	/*safe_mutex(&fork->mutex, LOCK);*/
+	pthread_mutex_lock(&fork->mutex);
 	if (get_int(&philo->mutex, &philo->status) != DEAD && get_int(&table->mutex, &table->sim_status) == RUNNING)
 	{
-		if (fork->id == philo->id)
-			philo->l_fork = fork;
-		else if (fork->id == (philo->id + 1) % table->n_philos)
-			philo->r_fork = fork;
+		if (get_int(&philo->mutex, &philo->id) == table->n_philos)
+		{
+			if (fork->id == philo->id)
+				philo->r_fork = fork;
+			else if (fork->id == (philo->id + 1) % table->n_philos)
+				philo->l_fork = fork;
+			else
+				printf("Philo %d got FORBIDDEN FORK %d\n", philo->id + 1, fork->id);
+		}
 		else
-			printf("Philo %d got FORBIDDEN FORK %d\n", philo->id + 1, fork->id);
+		{
+			if (fork->id == philo->id)
+				philo->l_fork = fork;
+			else if (fork->id == (philo->id + 1) % table->n_philos)
+				philo->r_fork = fork;
+			else
+				printf("Philo %d got FORBIDDEN FORK %d\n", philo->id + 1, fork->id);
+		}
 	}
 }

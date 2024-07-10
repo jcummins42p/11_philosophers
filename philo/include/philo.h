@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/19 21:42:58 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/06/20 00:08:18 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 
 # define USEC 1000000
 # define MSEC 1000
+# define DEATH_MOD 990
 
 typedef enum e_mutex_code
 {
