@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/10 20:12:38 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:27:56 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	routine_eat(t_table *table, t_philo *philo)
 		set_ts(&philo->mutex, &philo->last_meal_time, eat_start + time_to_eat);
 		print_ts(table, philo, EATING);
 		pusleep(table->time_to_eat);
+		print_ts(table, philo, DEBUG);
 		safe_mutex(&philo->r_fork->mutex, UNLOCK);
 		safe_mutex(&philo->l_fork->mutex, UNLOCK);
 		philo->r_fork = NULL;
@@ -63,15 +64,13 @@ void	routine_cycle(t_table *table, t_philo *philo)
 	int			t_status;
 	int			p_status;
 
-	/*t_status = get_int(&table->mutex, &table->sim_status);*/
-	/*p_status = get_int(&philo->mutex, &philo->status);*/
 	update_status(table, philo, &t_status, &p_status);
-	/*if (p_status == THINKING)*/
-		/*set_status(&philo->mutex, &philo->status, HUNGRY);*/
-	/*else*/
-		print_ts(table, philo, THINKING);
+	print_ts(table, philo, THINKING);
 	if (p_status == HUNGRY && t_status == RUNNING)
+	{
+		print_ts(table, philo, FORKING);
 		take_fork_one(table, philo);
+	}
 	update_status(table, philo, &t_status, &p_status);
 	if (p_status == HUNGRY && t_status == RUNNING)
 		take_fork_two(table, philo);

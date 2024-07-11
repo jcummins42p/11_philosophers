@@ -6,28 +6,11 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/10 20:21:36 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:22:23 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	check_full(t_table *table)
-{
-	int	i;
-	int	status;
-
-	i = 0;
-	while (i < table->n_philos)
-	{
-		status = get_phil_status(table->philos[i]);
-		if (status == FULL)
-			i++;
-		else
-			return ;
-	}
-	set_status(&table->mutex, &table->sim_status, END_FULL);
-}
 
 void	monitor_cycle(t_table *table, t_philo *philo, t_timestamp curr_time)
 {
@@ -63,12 +46,10 @@ void	*start_monitor(void *arg)
 
 	table = (t_table *)arg;
 	curr_time = ts_since_tv(table->start_time);
-	pusleep(table->starting_line - curr_time);
-	/*pthread_barrier_wait(&table->start_barrier);*/
-	curr_time = ts_since_tv(table->start_time);
 	status = get_int(&table->mutex, &table->sim_status);
 	safe_mutex(&table->mutex, LOCK);
-	safe_mutex(&table->mutex, LOCK);
+	safe_mutex(&table->mutex, UNLOCK);
+	usleep(table->time_to_die);
 	while (status == RUNNING)
 	{
 		i = 0;
@@ -79,7 +60,8 @@ void	*start_monitor(void *arg)
 			status = get_int(&table->mutex, &table->sim_status);
 			i++;
 		}
-		check_full(table);
+		if (get_int(&table->mutex, &table->n_hungry_philos) == 0)
+			set_status(&table->mutex, &table->sim_status, END_FULL);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/06/10 19:04:52 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:41:34 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	splash4(void)
 @@  @@PP PHILOSOPHERS @P@@@@P P P PHILOSOPHERS       \n");
 	printf("                                =   .           .  :  +=:. PPP@@@@\
 @ :=P@PP PP@@@PP@@@@@@@P@@@@PP@P  PHILOSOPHERS       \n" KDEF);
+	fflush(stdout);
 }
 
 void	splash3(void)
