@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/11 19:27:56 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:38:12 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 
 void	routine_sleep(t_table *table, t_philo *philo)
 {
-	if (get_int(&philo->mutex, &philo->status) != DEAD)
+	int status;
+
+	status = get_phil_status(philo);
+	if (status != DEAD)
 	{
-		set_status(&philo->mutex, &philo->status, SLEEPING);
 		print_ts(table, philo, SLEEPING);
+		set_status(&philo->mutex, &philo->status, SLEEPING);
 		pusleep(table->time_to_sleep);
-		if (get_int(&philo->mutex, &philo->status) != DEAD)
+		status = get_phil_status(philo);
+		if (status != DEAD)
 		{
 			if (get_int(&philo->mutex, &philo->n_meals) < table->n_limit_meals \
 					|| table->n_limit_meals == 0)
@@ -33,11 +37,10 @@ void	routine_eat(t_table *table, t_philo *philo)
 	t_timestamp	eat_start;
 	long		time_to_eat;
 
+	set_status(&philo->mutex, &philo->status, EATING);
 	time_to_eat = table->time_to_eat;
-	if (get_int(&philo->mutex, &philo->status) == HUNGRY && \
-			get_int(&table->mutex, &table->sim_status) == RUNNING)
+	if (get_int(&table->mutex, &table->sim_status) == RUNNING)
 	{
-		set_status(&philo->mutex, &philo->status, EATING);
 		eat_start = ts_since_tv(table->start_time);
 		set_ts(&philo->mutex, &philo->last_meal_time, eat_start + time_to_eat);
 		print_ts(table, philo, EATING);
@@ -82,15 +85,24 @@ void	routine_cycle(t_table *table, t_philo *philo)
 		routine_sleep(table, philo);
 }
 
-void	synchronise_threads(t_table *table, t_philo *philo)
+void	synchronise(t_table *table, t_philo *philo)
 {
-	t_timestamp	curr_time;
+	t_timestamp	delay;
 
-	set_ts(&philo->mutex, &philo->last_meal_time, table->starting_line);
-	curr_time = ts_since_tv(table->start_time);
-	pusleep(table->starting_line - curr_time);
+	safe_mutex(&table->mutex, LOCK);
+	safe_mutex(&table->mutex, UNLOCK);
+	delay = ts_since_tv(table->start_time);
+	/*printf("Delay starting philo %d was %u\n", philo->id, delay);*/
+	pusleep((MSEC * 100) - delay);
+	delay = ts_since_tv(table->start_time);
+	printf("Adjusted delay starting philo %d was %lld\n", philo->id, delay);
+	fflush(stdout);
 }
 
+//	the odd numbered philos need to sleep first so that the even ones can eat
+//	the first philo delays starting so that for odd n_philos they think first
+//	this avoids the chain of thinking going through the higher numbered philos,
+//	who start later and are more prone to dying
 void	*start_routine(void *arg)
 {
 	t_philo		*philo;
@@ -98,22 +110,18 @@ void	*start_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	/*printf("Commencing philosopher thread %d\n", philo->id);*/
-	/*synchronise_threads(table, philo);*/
-	/*pthread_barrier_wait(&table->start_barrier);*/
-	safe_mutex(&table->mutex, LOCK);
-	safe_mutex(&table->mutex, UNLOCK);
+	pusleep(100 + (philo->id * 100));
+	print_ts(table, philo, THINKING);
+	synchronise(table, philo);
 	if (philo->id % 2)
-	{
-		/*set_status(&philo->mutex, &philo->status, THINKING);*/
-		/*print_ts(table, philo, THINKING);*/
-		/*pusleep(table->time_to_sleep);*/
 		routine_sleep(table, philo);
-	}
-	while (get_int(&philo->mutex, &philo->status) == HUNGRY && \
-			get_int(&table->mutex, &table->sim_status) == RUNNING)
+	else if (philo->id == 0)
+		pusleep(200);
+	if (gettimeofday(&philo->start_time, NULL))
+		error_exit(TIME_FAIL);
+	while (get_phil_status(philo) == HUNGRY && get_sim_status(table) == RUNNING)
 		routine_cycle(table, philo);
-	if (get_int(&table->mutex, &table->sim_status) == RUNNING)
+	if (get_sim_status(table) == RUNNING)
 		print_ts(table, philo, THINKING);
 	if (philo->r_fork)
 		safe_mutex(&philo->r_fork->mutex, UNLOCK);

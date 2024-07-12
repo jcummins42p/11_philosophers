@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:46:04 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/11 19:30:31 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:35:19 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,21 @@ void	print_ts(t_table *table, t_philo *philo, int state)
 
 	ts = ts_since_tv(table->start_time);
 	if (state == THINKING)
-		printf("%d %d is thinking\n", ts / MSEC, philo->id + 1);
+		printf("%lld %d is thinking\n", ts / MSEC, philo->id + 1);
 	else if (state == EATING)
-		printf("%d %d is eating\n", ts / MSEC, philo->id + 1);
+		printf("%lld %d is eating\n", ts / MSEC, philo->id + 1);
 	else if (state == SLEEPING)
-		printf("%d %d is sleeping\n", ts / MSEC, philo->id + 1);
+		printf("%lld %d is sleeping\n", ts / MSEC, philo->id + 1);
 	else if (state == FORKING)
 	{
 		if (state != DEAD)
-			printf("%d %d has taken a fork\n", ts / MSEC, philo->id + 1);
+			printf("%lld %d has taken a fork\n", ts / MSEC, philo->id + 1);
 	}
 	else if (state == DEAD)
-		printf("%d %d is dead\n", ts / MSEC, philo->id + 1);
+		printf("%lld %d is dead\n", ts / MSEC, philo->id + 1);
 	else if (state == DEBUG)
-		printf("%d %d finished eating\n", ts / MSEC, philo->id + 1);
+		printf("%lld %d finished eating\n", ts / MSEC, philo->id + 1);
+	else if (state == LMT)
+		printf("%lld %d last meal time %lld\n", ts / MSEC, philo->id + 1, philo->last_meal_time / MSEC);
 	fflush(stdout);
 }

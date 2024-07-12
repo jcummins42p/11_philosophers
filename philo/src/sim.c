@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/11 15:29:08 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:18:15 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ int	start_sim(t_table *table)
 				printf("Thread not made\n");
 				error_exit(THREAD_FAIL);
 			}
+		pthread_create(&table->monitor_id, NULL, &start_monitor, table);
 		if (gettimeofday(&table->start_time, NULL))
 			error_exit(TIME_FAIL);
-		pthread_create(&table->monitor_id, NULL, &start_monitor, table);
 		safe_mutex(&table->mutex, UNLOCK);
 	}
 	return (0);

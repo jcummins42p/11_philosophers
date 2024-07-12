@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/11 19:27:41 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:57:10 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,14 @@
 
 # define USEC 1000000
 # define MSEC 1000
-# define DEATH_MOD 950
+# define DEATH_MOD 999
+
+typedef enum e_timecode
+{
+	SEC,
+	MLSEC,
+	MUSEC
+}
 
 typedef enum e_mutex_code
 {
@@ -73,7 +80,8 @@ typedef enum e_state
 	SLEEPING,
 	FULL,
 	DEAD,
-	DEBUG
+	DEBUG,
+	LMT
 }	t_state;
 
 typedef pthread_mutex_t	t_mutex;
@@ -81,7 +89,7 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
 typedef struct s_fork	t_fork;
-typedef unsigned int	t_timestamp;
+typedef long long		t_timestamp;
 
 typedef struct s_table
 {
@@ -109,6 +117,7 @@ typedef struct s_philo
 	t_fork		*l_fork;
 	t_fork		*r_fork;
 	int			n_meals;
+	struct timeval	start_time;
 	t_timestamp	last_meal_time;
 	t_table		*table;
 	t_mutex		mutex;
@@ -170,7 +179,7 @@ void		splash(void);
 //	psleep.c
 t_timestamp	ts_since_ts(t_timestamp t_start, t_timestamp t_end);
 t_timestamp	ts_since_tv(struct timeval t_start);
-void		pusleep(unsigned int remaining);
+void		pusleep(t_timestamp remaining);
 
 //	fork_funcs.c
 void		take_fork_one(t_table *table, t_philo *philo);
