@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/12 17:57:10 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:16:05 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef enum e_timecode
 	SEC,
 	MLSEC,
 	MUSEC
-}
+}	t_timecode;
 
 typedef enum e_mutex_code
 {
@@ -66,6 +66,7 @@ typedef enum e_errcode
 
 typedef enum e_endcode
 {
+	WAITING,
 	RUNNING,
 	END_FULL,
 	END_DEAD
@@ -100,7 +101,6 @@ typedef struct s_table
 	int				n_limit_meals;
 	int				n_hungry_philos;
 	struct timeval	start_time;
-	t_timestamp		starting_line;
 	int				sim_status;
 	t_fork			**forks;
 	t_philo			**philos;
@@ -114,6 +114,7 @@ typedef struct s_philo
 	int			id;
 	pthread_t	thread_id;
 	int			status;
+	bool		full;
 	t_fork		*l_fork;
 	t_fork		*r_fork;
 	int			n_meals;
@@ -132,7 +133,7 @@ typedef struct s_fork
 
 //	safe_handlers.c
 void		*safe_malloc(size_t bytes, t_table *table);
-void		safe_free(t_table *table);
+void		safe_free(t_table *table, t_errcode errcode);
 void		safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
 void		error_mutex(int status, t_mutex_code mutex_code);
 void		print_ts(t_table *table, t_philo *philo, int state);
@@ -160,6 +161,7 @@ void		print_valid_input(t_table *table);
 int			parse_input(t_table *table, char *argv[]);
 
 //	init.c
+int			init_table(t_table *table, char *argv[]);
 int			init_philos(t_table *table);
 int			init_forks(t_table *table);
 
@@ -179,6 +181,8 @@ void		splash(void);
 //	psleep.c
 t_timestamp	ts_since_ts(t_timestamp t_start, t_timestamp t_end);
 t_timestamp	ts_since_tv(struct timeval t_start);
+t_timestamp	gettime(t_timecode time_code);
+void		psleep(t_timestamp total, t_table *table);
 void		pusleep(t_timestamp remaining);
 
 //	fork_funcs.c

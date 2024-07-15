@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/12 17:58:30 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/15 16:46:02 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ t_timestamp	ts_since_ts(t_timestamp t_start, t_timestamp t_end)
 	return (t_end - t_start);
 }
 
-t_timestamp	gettime(t_time_code time_code)
+t_timestamp	gettime(t_timecode time_code)
 {
-	struct timeval t_get;
+	struct timeval tv;
 
-	if (gettimeofday(&t_get, NULL))
+	if (gettimeofday(&tv, NULL))
 		error_exit(TIME_FAIL);
 	if (time_code == SEC)
 		return (tv.tv_sec + (tv.tv_usec / USEC));
@@ -46,50 +46,22 @@ t_timestamp	gettime(t_time_code time_code)
 	return (1);
 }
 
-void	pusleep(t_timestamp total, t_table *table)
+void	psleep(t_timestamp total, t_table *table)
 {
 	t_timestamp	start;
 	t_timestamp	elapsed;
 	t_timestamp	rem;
 
-	start = gettime(MSEC);
-	while (gettime(MSEC) - start < total)
+	start = gettime(MUSEC);
+	while (gettime(MUSEC) - start < total)
 	{
 		if (get_sim_status(table) != RUNNING)
 			break;
-		elapsed = gettime(MSEC) - start;
+		elapsed = gettime(MUSEC) - start;
 		rem = total - elapsed;
-
 		if (rem > MSEC)
-			esleep(total - MSEC);
+			usleep(total - MSEC);
 		else
-			while (gettime(MSEC) - start < total);
+			while (gettime(MUSEC) - start < total);
 	}
 }
-
-/*void	pusleep(t_timestamp total)*/
-/*{*/
-	/*struct timeval	t_start;*/
-	/*t_timestamp		elapsed;*/
-
-	/*elapsed = 0;*/
-	/*if (gettimeofday(&t_start, NULL))*/
-		/*error_exit(TIME_FAIL);*/
-	/*while (elapsed < total)*/
-	/*{*/
-		/*elapsed = ts_since_tv(t_start);*/
-		/*if ((int)(total - elapsed) < MSEC)*/
-		/*{*/
-			/*while (elapsed <= total)*/
-			/*{*/
-				/*elapsed = ts_since_tv(t_start);*/
-				/*if (elapsed >= total)*/
-				/*{*/
-					/*return ;*/
-				/*}*/
-			/*}*/
-		/*}*/
-		/*usleep((total - elapsed) >> 1);*/
-	/*}*/
-	/*return ;*/
-/*}*/

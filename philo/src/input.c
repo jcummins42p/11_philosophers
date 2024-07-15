@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 16:11:30 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/11 17:57:58 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:09:44 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,7 @@ int	check_input(t_table *table)
 
 int	parse_input(t_table *table, char *argv[])
 {
-	table->n_philos = ft_atol(argv[1]);
-	table->n_hungry_philos = table->n_philos;
-	table->time_to_die = ft_atol(argv[2]) * MSEC;
-	table->time_to_eat = ft_atol(argv[3]) * MSEC;
-	table->time_to_sleep = ft_atol(argv[4]) * MSEC;
-	if (argv[5])
-		table->n_limit_meals = ft_atol(argv[5]);
-	else
-		table->n_limit_meals = 0;
-	table->sim_status = RUNNING;
-	pthread_mutex_init(&table->mutex, NULL);
+	init_table(table, argv);
 	if (check_input(table))
 		return (BAD_ARGS);
 	else
