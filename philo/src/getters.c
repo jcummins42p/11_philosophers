@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:58:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 17:04:52 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:34:22 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	get_phil_status(t_philo *philo)
 	int	out;
 
 	out = 0;
-	safe_mutex(&philo->mutex, LOCK);
+	pthread_mutex_lock(&philo->mutex);
 	out = philo->status;
-	safe_mutex(&philo->mutex, UNLOCK);
+	pthread_mutex_unlock(&philo->mutex);
 	return (out);
 }
 
@@ -28,9 +28,9 @@ int	get_sim_status(t_table *table)
 	int	out;
 
 	out = 0;
-	safe_mutex(&table->mutex, LOCK);
+	pthread_mutex_lock(&table->mutex);
 	out = table->sim_status;
-	safe_mutex(&table->mutex, UNLOCK);
+	pthread_mutex_unlock(&table->mutex);
 	return (out);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:54:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/11 17:19:09 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:10:03 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,11 @@ void	take_fork_two(t_table *table, t_philo *philo)
 	int			target;
 
 	if (table->n_philos == 1)
+	{
+		while (get_sim_status(table) == RUNNING)
+			psleep(MSEC, table);
 		return ;
+	}
 	target = (philo->id + 1) % table->n_philos;
 	take_fork(table, table->forks[target], philo);
 	/*print_ts(table, philo, FORKING);*/

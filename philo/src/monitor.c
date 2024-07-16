@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 17:48:14 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:38:03 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ void	monitor_cycle(t_table *table, t_philo *philo)
 	dead = died_of_hunger(table, philo);
 	if (dead)
 	{
-		set_status(&philo->mutex, &philo->status, DEAD);
-		set_status(&table->mutex, &table->sim_status, END_DEAD);
+		set_philo_status(philo, DEAD);
+		set_sim_status(table, END_DEAD);
 		usleep(MSEC);
 		print_ts(table, philo, DEAD);
 	}

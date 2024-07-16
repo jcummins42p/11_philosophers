@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 18:16:05 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:36:45 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,8 @@ void		error_mutex(int status, t_mutex_code mutex_code);
 void		print_ts(t_table *table, t_philo *philo, int state);
 
 //	setters.c
-void		set_status(t_mutex *mtx, int *old, int newval);
+void		set_sim_status(t_table *table, int newval);
+void		set_phil_status(t_philo *philo, int newval);
 void		set_increment(t_mutex *mtx, int *old);
 void		set_decrement(t_mutex *mtx, int *old);
 void		set_ts(t_mutex *mtx, t_timestamp *old, t_timestamp new);

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 18:23:25 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:07:46 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,22 +87,6 @@ void	routine_cycle(t_table *table, t_philo *philo)
 		routine_sleep(table, philo);
 }
 
-void	synchronise(t_table *table, t_philo *philo)
-{
-	t_timestamp	delay;
-
-	(void)philo;
-	safe_mutex(&table->mutex, LOCK);
-	safe_mutex(&table->mutex, UNLOCK);
-	delay = ts_since_tv(table->start_time);
-	/*printf("Delay starting philo %d was %u\n", philo->id, delay);*/
-	psleep((MSEC * 100) - delay, table);
-	/*set_ts(&philo->mutex, &philo->start_time, gettime(MUSEC));*/
-	/*delay = ts_since_tv(table->start_time);*/
-	/*printf("Adjusted delay starting philo %d was %lld\n", philo->id, delay);*/
-	/*fflush(stdout);*/
-}
-
 //	the odd numbered philos need to sleep first so that the even ones can eat
 //	the first philo delays starting so that for odd n_philos they think first
 //	this avoids the chain of thinking going through the higher numbered philos,
@@ -114,8 +98,6 @@ void	*start_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	/*psleep(100 + (philo->id * 100), table);*/
-	/*synchronise(table, philo);*/
 	while (get_sim_status(table) == WAITING)
 		;
 	print_ts(table, philo, THINKING);
@@ -135,3 +117,18 @@ void	*start_routine(void *arg)
 		safe_mutex(&philo->l_fork->mutex, UNLOCK);
 	return (NULL);
 }
+/*void	synchronise(t_table *table, t_philo *philo)*/
+/*{*/
+	/*t_timestamp	delay;*/
+
+	/*(void)philo;*/
+	/*safe_mutex(&table->mutex, LOCK);*/
+	/*safe_mutex(&table->mutex, UNLOCK);*/
+	/*delay = ts_since_tv(table->start_time);*/
+	/*[>printf("Delay starting philo %d was %u\n", philo->id, delay);<]*/
+	/*psleep((MSEC * 100) - delay, table);*/
+	/*[>set_ts(&philo->mutex, &philo->start_time, gettime(MUSEC));<]*/
+	/*[>delay = ts_since_tv(table->start_time);<]*/
+	/*[>printf("Adjusted delay starting philo %d was %lld\n", philo->id, delay);<]*/
+	/*[>fflush(stdout);<]*/
+/*}*/

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 12:43:20 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 17:13:07 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:15:10 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,8 @@ int	end_sim(t_table *table)
 
 int	spawn_philos(pthread_t *thread_id, t_philo *philo)
 {
-	if (pthread_create(thread_id, NULL, &start_routine, philo))
-		{
-			/*printf("Error creating philosopher thread %d\n", philo->id);*/
-			return (1);
-		}
-	else
-		{
-			/*printf("Success creating philosopher thread %d\n", philo->id);*/
-			return (0);
-		}
+	pthread_create(thread_id, NULL, &start_routine, philo);
+	return (0);
 }
 
 int	start_sim(t_table *table)
