@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 19:41:44 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:34:47 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ typedef struct s_table
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				n_limit_meals;
-	int				n_hungry_philos;
+	int				n_hungry;
 	struct timeval	start_time;
 	int				sim_status;
 	t_fork			**forks;

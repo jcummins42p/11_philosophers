@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 19:46:05 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:26:27 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	monitor_cycle(t_table *table, t_philo *philo)
 	{
 		full = get_bool(&philo->mutex, &philo->full);
 		if (!full && phil_now_full(table, philo))
-			set_decrement(&table->mutex, &table->n_hungry_philos);
+			set_decrement(&table->mutex, &table->n_hungry);
 	}
 }
 
@@ -82,7 +82,7 @@ void	*start_monitor(void *arg)
 			status = get_sim_status(table);
 			i++;
 		}
-		if (status == RUNNING && get_int(&table->mutex, &table->n_hungry_philos) == 0)
+		if (status == RUNNING && get_int(&table->mutex, &table->n_hungry) == 0)
 			set_sim_status(table, END_FULL);
 	}
 	return (NULL);

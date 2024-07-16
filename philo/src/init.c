@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 19:27:41 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:26:55 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	init_table(t_table *table, char *argv[])
 		table->n_limit_meals = ft_atol(argv[5]);
 	else
 		table->n_limit_meals = 0;
-	table->n_hungry_philos = table->n_philos;
+	table->n_hungry = table->n_philos;
 	gettimeofday(&table->start_time, NULL);
 	table->sim_status = WAITING;
 	table->forks = NULL;
