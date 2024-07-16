@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 16:46:02 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 17:40:50 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ void	psleep(t_timestamp total, t_table *table)
 	t_timestamp	rem;
 
 	start = gettime(MUSEC);
-	while (gettime(MUSEC) - start < total)
+	while (get_sim_status(table) == RUNNING && (gettime(MUSEC) - start < total))
 	{
 		if (get_sim_status(table) != RUNNING)
 			break;
 		elapsed = gettime(MUSEC) - start;
 		rem = total - elapsed;
-		if (rem > MSEC)
-			usleep(total - MSEC);
+		if (rem > (MSEC + 500))
+			usleep(MSEC);
 		else
 			while (gettime(MUSEC) - start < total);
 	}

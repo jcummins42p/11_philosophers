@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 15:36:45 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:41:44 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 # define USEC 1000000
 # define MSEC 1000
-# define DEATH_MOD 999
+# define DEATH_MOD 850
 
 typedef enum e_timecode
 {
@@ -105,23 +105,25 @@ typedef struct s_table
 	t_fork			**forks;
 	t_philo			**philos;
 	int				validity;
+	int				errcode;
 	pthread_t		monitor_id;
 	t_mutex			mutex;
+	t_mutex			printf_mutex;
 }	t_table;
 
 typedef struct s_philo
 {
-	int			id;
-	pthread_t	thread_id;
-	int			status;
-	bool		full;
-	t_fork		*l_fork;
-	t_fork		*r_fork;
-	int			n_meals;
+	int				id;
+	pthread_t		thread_id;
+	int				status;
+	bool				full;
+	t_fork			*l_fork;
+	t_fork			*r_fork;
+	int				n_meals;
 	struct timeval	start_time;
-	t_timestamp	last_meal_time;
-	t_table		*table;
-	t_mutex		mutex;
+	t_timestamp		last_meal_time;
+	t_table			*table;
+	t_mutex			mutex;
 }	t_philo;
 
 typedef struct s_fork
@@ -130,26 +132,32 @@ typedef struct s_fork
 	int		id;
 }	t_fork;
 
-
 //	safe_handlers.c
 void		*safe_malloc(size_t bytes, t_table *table);
 void		safe_free(t_table *table, t_errcode errcode);
 void		safe_mutex(t_mutex *mtx, t_mutex_code mutex_code);
 void		error_mutex(int status, t_mutex_code mutex_code);
+
+//	print_helpers.c
+void		printf_mutex(char *str, t_table *table);
 void		print_ts(t_table *table, t_philo *philo, int state);
 
 //	setters.c
 void		set_sim_status(t_table *table, int newval);
-void		set_phil_status(t_philo *philo, int newval);
+void		set_philo_status(t_philo *philo, int newval);
 void		set_increment(t_mutex *mtx, int *old);
 void		set_decrement(t_mutex *mtx, int *old);
 void		set_ts(t_mutex *mtx, t_timestamp *old, t_timestamp new);
 
 //	getters.c
 int			get_sim_status(t_table *table);
-int			get_phil_status(t_philo *philo);
+int			get_philo_status(t_philo *philo);
 int			get_int(t_mutex *mtx, int *val);
 t_timestamp	get_ts(t_mutex *mtx, t_timestamp *val);
+
+//	bool_set_get.c
+void		set_bool(t_mutex *mtx, bool *oldval, bool newval);
+bool		get_bool(t_mutex *mtx, bool *getval);
 
 //	errors.c
 void		error_exit(int errcode);
@@ -187,6 +195,7 @@ void		psleep(t_timestamp total, t_table *table);
 void		pusleep(t_timestamp remaining);
 
 //	fork_funcs.c
+void		drop_both_forks(t_philo *philo);
 void		take_fork_one(t_table *table, t_philo *philo);
 void		take_fork_two(t_table *table, t_philo *philo);
 void		take_fork(t_table *table, t_fork *fork, t_philo *philo);

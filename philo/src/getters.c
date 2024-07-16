@@ -6,13 +6,13 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:58:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 15:34:22 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:04:55 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	get_phil_status(t_philo *philo)
+int	get_philo_status(t_philo *philo)
 {
 	int	out;
 

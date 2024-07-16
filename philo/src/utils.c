@@ -6,15 +6,16 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 11:07:49 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/10 18:31:05 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 17:36:14 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
 void	update_status(t_table *table, t_philo *philo, int *t, int *p)
 {
-	*t = get_int(&table->mutex, &table->sim_status);
-	*p = get_int(&philo->mutex, &philo->status);
+	*t = get_sim_status(table);
+	*p = get_philo_status(philo);
 }
 
 int	ft_strlen(const char *str)

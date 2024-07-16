@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 18:31:58 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/15 18:00:14 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:27:41 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	init_table(t_table *table, char *argv[])
 	table->philos = NULL;
 	table->monitor_id = 0;
 	pthread_mutex_init(&table->mutex, NULL);
+	pthread_mutex_init(&table->printf_mutex, NULL);
 	return (0);
 }
 

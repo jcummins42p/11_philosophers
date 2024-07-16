@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 15:07:46 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:48:01 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,17 @@
 
 void	routine_sleep(t_table *table, t_philo *philo)
 {
-	int status;
+	int	status;
 
-	status = get_phil_status(philo);
+	status = get_philo_status(philo);
 	if (status != DEAD)
 	{
 		print_ts(table, philo, SLEEPING);
-		set_status(&philo->mutex, &philo->status, SLEEPING);
+		set_philo_status(philo, SLEEPING);
 		psleep(table->time_to_sleep, table);
-		status = get_phil_status(philo);
+		status = get_philo_status(philo);
 		if (status != DEAD)
-		{
-			if (get_int(&philo->mutex, &philo->n_meals) < table->n_limit_meals \
-					|| table->n_limit_meals == 0)
-				set_status(&philo->mutex, &philo->status, HUNGRY);
-		}
+			set_philo_status(philo, HUNGRY);
 	}
 }
 
@@ -37,31 +33,19 @@ void	routine_eat(t_table *table, t_philo *philo)
 	t_timestamp	eat_start;
 	long		time_to_eat;
 
-	set_status(&philo->mutex, &philo->status, EATING);
+	set_philo_status(philo, EATING);
 	time_to_eat = table->time_to_eat;
-	if (get_int(&table->mutex, &table->sim_status) == RUNNING)
+	if (get_sim_status(table) == RUNNING)
 	{
 		eat_start = ts_since_tv(table->start_time);
 		set_ts(&philo->mutex, &philo->last_meal_time, eat_start);
 		print_ts(table, philo, EATING);
 		psleep(table->time_to_eat, table);
-		print_ts(table, philo, DEBUG);
-		safe_mutex(&philo->r_fork->mutex, UNLOCK);
-		safe_mutex(&philo->l_fork->mutex, UNLOCK);
-		philo->r_fork = NULL;
-		philo->l_fork = NULL;
+		drop_both_forks(philo);
 		set_increment(&philo->mutex, &philo->n_meals);
-		if (get_int(&philo->mutex, &philo->n_meals) == table->n_limit_meals)
-			set_status(&philo->mutex, &philo->status, FULL);
-		psleep(200, table);
 	}
 	else
-	{
-		safe_mutex(&philo->r_fork->mutex, UNLOCK);
-		safe_mutex(&philo->l_fork->mutex, UNLOCK);
-		philo->r_fork = NULL;
-		philo->l_fork = NULL;
-	}
+		drop_both_forks(philo);
 }
 
 void	routine_cycle(t_table *table, t_philo *philo)
@@ -77,14 +61,19 @@ void	routine_cycle(t_table *table, t_philo *philo)
 		take_fork_one(table, philo);
 	}
 	update_status(table, philo, &t_status, &p_status);
-	if (p_status == HUNGRY && t_status == RUNNING)
-		take_fork_two(table, philo);
-	update_status(table, philo, &t_status, &p_status);
-	if (philo->l_fork && philo->r_fork && t_status == RUNNING)
-		routine_eat(table, philo);
-	update_status(table, philo, &t_status, &p_status);
-	if (p_status != DEAD && t_status == RUNNING)
-		routine_sleep(table, philo);
+	if (table->n_philos != 1)
+	{
+		if (p_status == HUNGRY && t_status == RUNNING)
+			take_fork_two(table, philo);
+		update_status(table, philo, &t_status, &p_status);
+		if (philo->l_fork && philo->r_fork && t_status == RUNNING)
+			routine_eat(table, philo);
+		update_status(table, philo, &t_status, &p_status);
+		if (p_status != DEAD && t_status == RUNNING)
+			routine_sleep(table, philo);
+		if (philo->id % 2)
+			psleep(200, table);
+	}
 }
 
 //	the odd numbered philos need to sleep first so that the even ones can eat
@@ -93,42 +82,29 @@ void	routine_cycle(t_table *table, t_philo *philo)
 //	who start later and are more prone to dying
 void	*start_routine(void *arg)
 {
-	t_philo		*philo;
+	t_philo		*phil;
 	t_table		*table;
 
-	philo = (t_philo *)arg;
-	table = philo->table;
+	phil = (t_philo *)arg;
+	table = phil->table;
 	while (get_sim_status(table) == WAITING)
-		;
-	print_ts(table, philo, THINKING);
-	if (philo->id % 2)
-		routine_sleep(table, philo);
-	else if (philo->id == 0)
+		psleep(100, table);
+	print_ts(table, phil, THINKING);
+	if (phil->id % 2)
+		routine_sleep(table, phil);
+	else if (phil->id == 0)
 		psleep(200, table);
-	if (gettimeofday(&philo->start_time, NULL))
+	pthread_mutex_lock(&phil->mutex);
+	if (gettimeofday(&phil->start_time, NULL))
 		error_exit(TIME_FAIL);
-	while (get_phil_status(philo) == HUNGRY && get_sim_status(table) == RUNNING)
-		routine_cycle(table, philo);
+	pthread_mutex_unlock(&phil->mutex);
+	while (get_philo_status(phil) == HUNGRY && get_sim_status(table) == RUNNING)
+		routine_cycle(table, phil);
 	if (get_sim_status(table) == RUNNING)
-		print_ts(table, philo, THINKING);
-	if (philo->r_fork)
-		safe_mutex(&philo->r_fork->mutex, UNLOCK);
-	if (philo->l_fork)
-		safe_mutex(&philo->l_fork->mutex, UNLOCK);
+		print_ts(table, phil, THINKING);
+	if (phil->r_fork)
+		safe_mutex(&phil->r_fork->mutex, UNLOCK);
+	if (phil->l_fork)
+		safe_mutex(&phil->l_fork->mutex, UNLOCK);
 	return (NULL);
 }
-/*void	synchronise(t_table *table, t_philo *philo)*/
-/*{*/
-	/*t_timestamp	delay;*/
-
-	/*(void)philo;*/
-	/*safe_mutex(&table->mutex, LOCK);*/
-	/*safe_mutex(&table->mutex, UNLOCK);*/
-	/*delay = ts_since_tv(table->start_time);*/
-	/*[>printf("Delay starting philo %d was %u\n", philo->id, delay);<]*/
-	/*psleep((MSEC * 100) - delay, table);*/
-	/*[>set_ts(&philo->mutex, &philo->start_time, gettime(MUSEC));<]*/
-	/*[>delay = ts_since_tv(table->start_time);<]*/
-	/*[>printf("Adjusted delay starting philo %d was %lld\n", philo->id, delay);<]*/
-	/*[>fflush(stdout);<]*/
-/*}*/
