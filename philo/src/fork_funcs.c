@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:54:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/17 13:11:23 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:23:32 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	take_fork_one(t_table *table, t_philo *philo)
 	int			target;
 
 	print_ts(table, philo, FORKING);
-	target = philo->id;
+	if (philo->id + 1 == table->n_philos)
+		target = 0;
+	else
+		target = philo->id;
 	take_fork(table, table->forks[target], philo);
 }
 
@@ -39,7 +42,10 @@ void	take_fork_two(t_table *table, t_philo *philo)
 			psleep(MSEC, table);
 		return ;
 	}
-	target = (philo->id + 1) % table->n_philos;
+	if (philo->id + 1 == table->n_philos)
+		target = philo->id;
+	else
+		target = (philo->id + 1) % table->n_philos;
 	take_fork(table, table->forks[target], philo);
 }
 
