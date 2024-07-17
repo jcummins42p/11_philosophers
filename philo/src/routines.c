@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/17 13:48:10 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:47:15 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ void	routine_eat(t_table *table, t_philo *philo)
 		drop_both_forks(philo);
 }
 
+void	routine_solo(t_table *table, t_philo *philo)
+{
+	psleep(table->time_to_die, table);
+	set_sim_status(table, END_DEAD);
+	set_philo_status(philo, DEAD);
+}
+
 void	routine_cycle(t_table *table, t_philo *philo)
 {
 	int			t_status;
@@ -71,8 +78,7 @@ void	routine_cycle(t_table *table, t_philo *philo)
 		psleep(200, table);
 	}
 	else
-		while (get_sim_status(table) == RUNNING)
-			;
+		routine_solo(table, philo);
 }
 
 //	the odd numbered philos need to sleep first so that the even ones can eat
