@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:56:55 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 20:34:47 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:59:51 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 # define USEC 1000000
 # define MSEC 1000
-# define DEATH_MOD 850
+# define DEATH_MOD 0
 
 typedef enum e_timecode
 {
@@ -116,7 +116,7 @@ typedef struct s_philo
 	int				id;
 	pthread_t		thread_id;
 	int				status;
-	bool				full;
+	bool			full;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
 	int				n_meals;

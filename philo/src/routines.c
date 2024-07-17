@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 19:48:01 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:48:10 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,7 @@ void	routine_cycle(t_table *table, t_philo *philo)
 	update_status(table, philo, &t_status, &p_status);
 	print_ts(table, philo, THINKING);
 	if (p_status == HUNGRY && t_status == RUNNING)
-	{
-		print_ts(table, philo, FORKING);
 		take_fork_one(table, philo);
-	}
 	update_status(table, philo, &t_status, &p_status);
 	if (table->n_philos != 1)
 	{
@@ -71,9 +68,11 @@ void	routine_cycle(t_table *table, t_philo *philo)
 		update_status(table, philo, &t_status, &p_status);
 		if (p_status != DEAD && t_status == RUNNING)
 			routine_sleep(table, philo);
-		if (philo->id % 2)
-			psleep(200, table);
+		psleep(200, table);
 	}
+	else
+		while (get_sim_status(table) == RUNNING)
+			;
 }
 
 //	the odd numbered philos need to sleep first so that the even ones can eat
@@ -89,7 +88,6 @@ void	*start_routine(void *arg)
 	table = phil->table;
 	while (get_sim_status(table) == WAITING)
 		psleep(100, table);
-	print_ts(table, phil, THINKING);
 	if (phil->id % 2)
 		routine_sleep(table, phil);
 	else if (phil->id == 0)
@@ -100,8 +98,6 @@ void	*start_routine(void *arg)
 	pthread_mutex_unlock(&phil->mutex);
 	while (get_philo_status(phil) == HUNGRY && get_sim_status(table) == RUNNING)
 		routine_cycle(table, phil);
-	if (get_sim_status(table) == RUNNING)
-		print_ts(table, phil, THINKING);
 	if (phil->r_fork)
 		safe_mutex(&phil->r_fork->mutex, UNLOCK);
 	if (phil->l_fork)

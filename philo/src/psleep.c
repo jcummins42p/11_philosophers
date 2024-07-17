@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:37:12 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 17:40:50 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:29:17 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_timestamp	ts_since_ts(t_timestamp t_start, t_timestamp t_end)
 
 t_timestamp	gettime(t_timecode time_code)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL))
 		error_exit(TIME_FAIL);
@@ -56,12 +56,13 @@ void	psleep(t_timestamp total, t_table *table)
 	while (get_sim_status(table) == RUNNING && (gettime(MUSEC) - start < total))
 	{
 		if (get_sim_status(table) != RUNNING)
-			break;
+			break ;
 		elapsed = gettime(MUSEC) - start;
 		rem = total - elapsed;
 		if (rem > (MSEC + 500))
 			usleep(MSEC);
 		else
-			while (gettime(MUSEC) - start < total);
+			while ((gettime(MUSEC) - start) < total)
+				;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 15:46:46 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 20:26:27 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:06:07 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	phil_now_full(t_table *table, t_philo *philo)
 		return (false);
 }
 
-void	monitor_cycle(t_table *table, t_philo *philo)
+void	monitor_checks(t_table *table, t_philo *philo)
 {
 	bool	full;
 
@@ -62,28 +62,35 @@ void	monitor_cycle(t_table *table, t_philo *philo)
 	}
 }
 
+void	monitor_cycle(t_table *table)
+{
+	int	i;
+
+	while (get_sim_status(table) == RUNNING)
+	{
+		i = 0;
+		while (i < table->n_philos && get_sim_status(table) == RUNNING)
+			monitor_checks(table, table->philos[i++]);
+		if (get_sim_status(table) == RUNNING && \
+			get_int(&table->mutex, &table->n_hungry) == 0)
+			set_sim_status(table, END_FULL);
+	}
+}
+
 void	*start_monitor(void *arg)
 {
 	t_table		*table;
-	int			status;
-	int			i;
 
 	table = (t_table *)arg;
-	status = WAITING;
-	while (status == WAITING)
-		status = get_sim_status(table);
-	usleep(table->time_to_die);
-	while (status == RUNNING)
+	while (get_sim_status(table) == WAITING)
+		;
+	psleep(table->time_to_die, table);
+	if (table->n_philos == 1)
 	{
-		i = 0;
-		while (i < table->n_philos && status == RUNNING)
-		{
-			monitor_cycle(table, table->philos[i]);
-			status = get_sim_status(table);
-			i++;
-		}
-		if (status == RUNNING && get_int(&table->mutex, &table->n_hungry) == 0)
-			set_sim_status(table, END_FULL);
+		set_sim_status(table, END_DEAD);
+		print_ts(table, table->philos[0], DEAD);
 	}
+	else
+		monitor_cycle(table);
 	return (NULL);
 }

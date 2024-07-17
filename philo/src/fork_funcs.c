@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:54:07 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/16 17:24:37 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:11:23 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	take_fork_one(t_table *table, t_philo *philo)
 {
 	int			target;
 
+	print_ts(table, philo, FORKING);
 	target = philo->id;
 	take_fork(table, table->forks[target], philo);
 }
