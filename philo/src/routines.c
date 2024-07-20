@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 19:34:43 by jcummins          #+#    #+#             */
-/*   Updated: 2024/07/17 14:47:15 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:18:08 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ void	routine_sleep(t_table *table, t_philo *philo)
 void	routine_eat(t_table *table, t_philo *philo)
 {
 	t_timestamp	eat_start;
-	long		time_to_eat;
 
 	set_philo_status(philo, EATING);
-	time_to_eat = table->time_to_eat;
 	if (get_sim_status(table) == RUNNING)
 	{
 		eat_start = ts_since_tv(table->start_time);
